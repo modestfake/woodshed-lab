@@ -43,9 +43,14 @@ import { cn } from "@/lib/utils";
 
 const SCALE_GROUPS = Array.from(new Set(SCALES.map((s) => s.group)));
 
-// Playback plays the box as eighth-note triplets — 3 notes per beat, so one
-// string lands per beat, the natural feel for a 3-notes-per-string box.
-const NOTES_PER_BEAT = 3;
+type Feel = "straight" | "swing";
+
+// Straight feel plays the box as eighth-note triplets — 3 notes/beat, one string
+// per beat (natural for 3NPS). Swing drops to duple eighths (2/beat) with a
+// medium long-short lilt (≈1.85:1).
+const STRAIGHT_NPB = 3;
+const SWING_NPB = 2;
+const SWING_RATIO = 0.3;
 
 export function BoxTrainer() {
   const [keyId, setKeyId] = useState("C");
@@ -54,6 +59,7 @@ export function BoxTrainer() {
   const [labelMode, setLabelMode] = useState<LabelMode>("name");
   const [bpm, setBpm] = useState(120);
   const [playMode, setPlayMode] = useState<PlayMode>("asc");
+  const [feel, setFeel] = useState<Feel>("straight");
 
   const theKey = keyById(keyId);
   const theScale = scaleById(scaleId);
@@ -61,10 +67,12 @@ export function BoxTrainer() {
   const active = useMemo(() => box(theKey, theScale, boxN), [theKey, theScale, boxN]);
   const activeBoxName = boxModeName(theScale, boxN);
 
+  const notesPerBeat = feel === "swing" ? SWING_NPB : STRAIGHT_NPB;
   const { playingKey, isPlaying, toggle } = usePlayback(
     active,
-    60000 / (bpm * NOTES_PER_BEAT),
+    60000 / (bpm * notesPerBeat),
     playMode,
+    feel === "swing" ? SWING_RATIO : 0,
   );
 
   const step = (dir: number) => setBoxN((n) => ((n - 1 + dir + BOX_COUNT) % BOX_COUNT) + 1);
@@ -227,6 +235,22 @@ export function BoxTrainer() {
               className="px-3"
             >
               <Shuffle className="h-4 w-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </Field>
+
+        <Field label="Feel">
+          <ToggleGroup
+            type="single"
+            value={feel}
+            onValueChange={(v) => v && setFeel(v as Feel)}
+            variant="outline"
+          >
+            <ToggleGroupItem value="straight" className="px-3">
+              Straight
+            </ToggleGroupItem>
+            <ToggleGroupItem value="swing" className="px-3">
+              Swing
             </ToggleGroupItem>
           </ToggleGroup>
         </Field>

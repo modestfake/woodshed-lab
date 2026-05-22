@@ -52,6 +52,9 @@ to `status: "live"`.
 - [x] Tempo control for box playback — BPM slider (40–240), notes as eighth-note triplets
       (3/beat); tempo is read live so the slider changes speed mid-playback
 - [x] Ascending / descending / loop (ping-pong) playback toggle — Direction control in BoxTrainer
+- [x] Feel: Straight / Swing toggle — swing switches to a duple eighth feel (2/beat) with a
+      medium long-short lilt (≈1.85:1); plus per-note velocity humanize (level + brightness)
+      and a darker lowpass + small-room reverb for a jazzier voice
 - [ ] Per-box tinting in the dim layer so you can see boxes interlock
 - [ ] Highlight a selected root and show intervals from it
 - [ ] Alternate tunings / capo (TUNING is already data-driven in `theory.ts`)

@@ -9,8 +9,8 @@ export type PlayMode = "asc" | "desc" | "loop" | "random";
 const REST_CHANCE = 0.3;
 
 // The 7th is the most restless degree, so it gets this much of a normal note's
-// pick weight in shuffle mode — present, but it leans on more consonant tones.
-const SEVENTH_WEIGHT = 0.35;
+// pick weight in shuffle mode — clearly the rarest tone, but still in the mix.
+const SEVENTH_WEIGHT = 0.6;
 
 // Weighted random index over `seq`, skipping `exclude` (use -1 for none) so the
 // same note doesn't sound twice in a row. 7th-degree notes are de-emphasised.
@@ -31,15 +31,19 @@ function weightedRandomIndex(seq: Note[], exclude: number): number {
 }
 
 // Plays a sequence of notes one at a time, exposing which note is sounding.
-// `stepMs` (the gap between notes) is read live, so changing tempo mid-playback
-// takes effect on the next note. `mode` is captured when playback starts:
+// `stepMs` (the average gap between notes) and `swing` are read live, so tempo
+// or feel changes mid-playback take effect on the next note. `mode` is captured
+// when playback starts:
 //   asc    — low → high once, then stop
 //   desc   — high → low once, then stop
 //   loop   — bounce low → high → low … until stopped (ping-pong)
 //   random — shuffle order (no immediate repeats), with random rests, until
 //            stopped; ear training
+// `swing` (0 = straight) lengthens every other step and shortens its partner —
+// long/short = (1+swing)/(1-swing) — so consecutive notes lilt while each pair
+// still sums to 2·stepMs and the tempo holds.
 // Stops automatically when the note set changes (e.g. switching box/key/scale).
-export function usePlayback(notes: Note[], stepMs: number, mode: PlayMode) {
+export function usePlayback(notes: Note[], stepMs: number, mode: PlayMode, swing: number) {
   // `running` tracks the engine; `playingKey` is the note currently sounding
   // (null during a rest), so the two can't be conflated.
   const [running, setRunning] = useState(false);
@@ -49,6 +53,8 @@ export function usePlayback(notes: Note[], stepMs: number, mode: PlayMode) {
   notesRef.current = notes;
   const stepMsRef = useRef(stepMs);
   stepMsRef.current = stepMs;
+  const swingRef = useRef(swing);
+  swingRef.current = swing;
   const modeRef = useRef(mode);
   modeRef.current = mode;
 
@@ -74,17 +80,22 @@ export function usePlayback(notes: Note[], stepMs: number, mode: PlayMode) {
       mode === "desc" ? len - 1 : mode === "random" ? weightedRandomIndex(notesRef.current, -1) : 0;
     let dir = mode === "desc" ? -1 : 1;
     let rested = false;
+    let long = true; // swing: alternate long/short, starting long (downbeat)
     const tick = () => {
       const seq = notesRef.current;
       if (i < 0 || i >= seq.length) {
         stop();
         return;
       }
+      // Gap until the next step: swing lengthens this one and shortens the next.
+      const s = swingRef.current;
+      const delay = s > 0 ? stepMsRef.current * (long ? 1 + s : 1 - s) : stepMsRef.current;
+      long = !long;
       // Random rest: stay silent this step (but don't double up rests).
       if (mode === "random" && !rested && Math.random() < REST_CHANCE) {
         rested = true;
         setPlayingKey(null);
-        timer.current = window.setTimeout(tick, stepMsRef.current);
+        timer.current = window.setTimeout(tick, delay);
         return;
       }
       rested = false;
@@ -105,7 +116,7 @@ export function usePlayback(notes: Note[], stepMs: number, mode: PlayMode) {
         }
       }
       i = next;
-      timer.current = window.setTimeout(tick, stepMsRef.current);
+      timer.current = window.setTimeout(tick, delay);
     };
     tick();
   }, [stop]);
