@@ -6,7 +6,7 @@ lot at the bottom. (Curriculum source of truth is `src/exercises.ts`; this is th
 
 ## Tooling & DX
 
-- [ ] Switch package manager to **pnpm** (do this first — scripts/hooks below build on it)
+- [x] Switch package manager to **pnpm** (do this first — scripts/hooks below build on it)
 - [ ] **oxlint** (lint) + **oxfmt** (format) — fast; the per-edit / pre-commit gate
 - [ ] **fallow** (`npx fallow` — dead-code / dupes / health / architecture drift) —
       fast enough to include in pre-commit; also a `pnpm health` script + Claude Code MCP
