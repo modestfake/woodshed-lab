@@ -1,7 +1,7 @@
 # Woodshed Lab
 
 An interactive guitar-practice fretboard built around a jazz curriculum. Phase 1
-visualizes the Ted Greene 3-notes-per-string **box** system in any key and scale.
+visualizes the 3-notes-per-string (3NPS) **box** system in any key and scale.
 This file pins down the project's shared vocabulary so plans and code stay precise.
 
 ## Language

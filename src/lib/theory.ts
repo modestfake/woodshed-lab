@@ -1,4 +1,4 @@
-// Music theory engine for the Ted Greene 3-notes-per-string box system,
+// Music theory engine for the 3-notes-per-string (3NPS) box system,
 // generalized to any 7-note scale.
 // String indices: 0 = low E (6th string) ... 5 = high E (1st string).
 

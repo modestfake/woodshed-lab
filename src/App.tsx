@@ -20,9 +20,7 @@ function App() {
             </div>
             <div>
               <h1 className="text-lg font-semibold leading-none">Woodshed Lab</h1>
-              <p className="text-xs text-muted-foreground">
-                Ted Greene box system · 3 notes per string
-              </p>
+              <p className="text-xs text-muted-foreground">3-notes-per-string box system</p>
             </div>
           </div>
           <div className="flex items-center gap-1">

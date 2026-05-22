@@ -68,11 +68,12 @@ to `status: "live"`.
 
 ## Content & docs
 
-- [ ] **Name the system correctly** — research the proper name (it's standard
-      *3-notes-per-string*; the "Ted Greene" attribution is likely off — confirm), then
-      sharpen the **Boxes** description so it's actually clear what it is
-- [ ] Establish a consistent **title + description pattern** for every exercise page
-      (drives the `label`/`description` fields in `src/exercises.ts`)
+- [x] **Name the system correctly** — confirmed the "Ted Greene" attribution was wrong (he's
+      known for chords / the V-System, not 3NPS scale fingerings). Scrubbed it from the header,
+      README, CONTEXT, and theory.ts; now framed as the standard **3-notes-per-string (3NPS)**
+      box system.
+- [x] Establish a consistent **title + description pattern** for every exercise page —
+      each `description` is now a tight *what + why* (drives `src/exercises.ts`)
 
 ## Polish & tech debt
 
