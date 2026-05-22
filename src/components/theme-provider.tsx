@@ -11,7 +11,7 @@ type ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
 
-const STORAGE_KEY = "fretboard-lab-theme";
+const STORAGE_KEY = "woodshed-lab-theme";
 
 function systemTheme(): Resolved {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
