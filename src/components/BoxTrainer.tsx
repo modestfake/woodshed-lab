@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
-import { ChevronLeft, ChevronRight, Play, Square } from "lucide-react"
+import { ChevronLeft, ChevronRight, Info, Play, Square } from "lucide-react"
 import { Fretboard, type LabelMode } from "@/components/Fretboard"
 import { Button } from "@/components/ui/button"
 import {
@@ -176,9 +176,9 @@ export function BoxTrainer() {
         <Legend className="bg-[var(--root)]" text="Root (1)" />
         <Legend className="bg-[var(--box)]" text={`Box ${boxN} tones`} />
         <Legend className="bg-[var(--box-dim)]" text="Other boxes" />
-        <span className="text-xs">
-          Click any fret to hear it · <kbd>←</kbd> <kbd>→</kbd> switch boxes ·{" "}
-          <kbd>Space</kbd> play
+        <span className="flex items-center gap-1.5 text-xs">
+          <Info className="h-3.5 w-3.5" />
+          Click any fret to hear it
         </span>
       </div>
     </div>

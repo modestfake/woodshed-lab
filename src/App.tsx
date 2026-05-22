@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ExerciseList } from "@/components/ExerciseList"
 import { ModeToggle } from "@/components/ModeToggle"
 import { PaletteSwitcher } from "@/components/PaletteSwitcher"
+import { ShortcutsHelp } from "@/components/ShortcutsHelp"
 import { EXERCISES } from "@/exercises"
 
 function App() {
@@ -24,7 +25,10 @@ function App() {
               </p>
             </div>
           </div>
-          <ModeToggle />
+          <div className="flex items-center gap-1">
+            <ShortcutsHelp />
+            <ModeToggle />
+          </div>
         </div>
       </header>
 

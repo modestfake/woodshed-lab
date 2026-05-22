@@ -57,7 +57,7 @@ to `status: "live"`.
 - [ ] **Audit shadcn usage** — are we reaching for the right components? e.g. the left nav
       could be a shadcn sidebar / navigation-menu instead of hand-rolled buttons
 - [ ] **Curate palettes** — keep just a few good ones, drop the rest
-- [ ] **Better keybindings hint** — use a shadcn component (kbd / tooltip / help popover)
+- [x] **Better keybindings hint** — shadcn `Popover` + `Kbd` in the header (`ShortcutsHelp`)
 - [ ] Revisit overall design once a couple exercises exist (look for shared patterns;
       possibly with Pencil)
 - [ ] **Header cleanup** — drop in the new logo; consider removing the subtitle
