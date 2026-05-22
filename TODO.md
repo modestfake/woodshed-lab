@@ -80,8 +80,8 @@ to `status: "live"`.
 
 ## Polish & tech debt
 
-- [x] Curate palettes — kept 5 (default **Grape & Berry**; Mint & Sky reversed → Sky & Mint)
-      and kept the `PaletteSwitcher`, made compact
+- [x] Curate palettes — kept 4 (default **Grape & Berry**) and kept the `PaletteSwitcher`,
+      made compact
 - [ ] Rename `fretboard-lab-theme` localStorage key → `woodshed-lab-theme` (one-time theme reset)
 - [x] Decide on `.agents/` / `.claude/` / `skills-lock.json` — keep committed vs gitignore
       (decided: keep committed; `.claude/settings.json` + hooks now tracked too)

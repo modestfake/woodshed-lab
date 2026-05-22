@@ -52,7 +52,7 @@ export function PaletteSwitcher() {
     >
       <Palette className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       <Select value={id} onValueChange={setId}>
-        <SelectTrigger size="sm" className="w-36">
+        <SelectTrigger size="sm" className="w-fit">
           <SelectValue />
         </SelectTrigger>
         <SelectContent align="end" className="max-h-80">
@@ -62,13 +62,11 @@ export function PaletteSwitcher() {
             const root = dark ? darkVariant(p.root) : p.root;
             return (
               <SelectItem key={p.id} value={p.id}>
-                <span className="flex items-center gap-2">
-                  <span className="flex gap-0.5">
-                    <span className="h-3 w-3 rounded-full" style={{ background: box }} />
-                    <span className="h-3 w-3 rounded-full" style={{ background: root }} />
-                  </span>
-                  {p.name}
+                <span className="flex gap-0.5">
+                  <span className="h-3 w-3 rounded-full" style={{ background: box }} />
+                  <span className="h-3 w-3 rounded-full" style={{ background: root }} />
                 </span>
+                <span className="sr-only">{p.name}</span>
               </SelectItem>
             );
           })}

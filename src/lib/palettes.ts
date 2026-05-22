@@ -8,7 +8,6 @@ export type Palette = { id: string; name: string; box: string; root: string };
 export const PALETTES: Palette[] = [
   { id: "grape-berry", name: "Grape & Berry", box: "#5a189a", root: "#ff4d6d" },
   { id: "ultraviolet", name: "Ultraviolet", box: "#7c3aed", root: "#06b6d4" },
-  { id: "sky-mint", name: "Sky & Mint", box: "#38bdf8", root: "#14b8a6" },
   { id: "terracotta", name: "Terracotta", box: "#2a9d8f", root: "#e76f51" },
   { id: "amber-rose", name: "Amber & Rose", box: "#f59e0b", root: "#e11d48" },
 ];
