@@ -78,8 +78,9 @@ to `status: "live"`.
 
 - [ ] Remove the temporary `PaletteSwitcher` once palettes are curated (Magenta Dream is default)
 - [ ] Rename `fretboard-lab-theme` localStorage key → `woodshed-lab-theme` (one-time theme reset)
-- [ ] Decide on `.agents/` / `.claude/` / `skills-lock.json` — keep committed vs gitignore
-- [ ] Commit the current uncommitted work (cleanup / refactor / docs — consider splitting)
+- [x] Decide on `.agents/` / `.claude/` / `skills-lock.json` — keep committed vs gitignore
+      (decided: keep committed; `.claude/settings.json` + hooks now tracked too)
+- [x] Commit the current uncommitted work (cleanup / refactor / docs — consider splitting)
 - [ ] ~~Tests on `theory.ts`~~ — declined for now (personal project)
 
 ## Parking lot — raw ideas
