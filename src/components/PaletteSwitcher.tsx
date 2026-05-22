@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Palette } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { useTheme } from "@/components/theme-provider";
 import { PALETTES, darkVariant, readableFg } from "@/lib/palettes";
 
@@ -45,6 +39,11 @@ export function PaletteSwitcher() {
   useHotkeys("up", () => step(-1), { preventDefault: true });
   useHotkeys("down", () => step(1), { preventDefault: true });
 
+  const dark = resolvedTheme === "dark";
+  const selected = PALETTES.find((p) => p.id === id) ?? PALETTES[0];
+  const selBox = dark ? darkVariant(selected.box) : selected.box;
+  const selRoot = dark ? darkVariant(selected.root) : selected.root;
+
   return (
     <div
       className="fixed bottom-4 right-4 z-50 flex items-center gap-1.5 rounded-md border bg-background/90 px-2 py-1.5 shadow-lg backdrop-blur"
@@ -52,21 +51,25 @@ export function PaletteSwitcher() {
     >
       <Palette className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       <Select value={id} onValueChange={setId}>
-        <SelectTrigger size="sm" className="w-fit">
-          <SelectValue />
+        <SelectTrigger size="sm" className="w-fit" aria-label={`Palette: ${selected.name}`}>
+          <span className="flex gap-0.5">
+            <span className="h-3 w-3 rounded-full" style={{ background: selBox }} />
+            <span className="h-3 w-3 rounded-full" style={{ background: selRoot }} />
+          </span>
         </SelectTrigger>
         <SelectContent align="end" className="max-h-80">
           {PALETTES.map((p) => {
-            const dark = resolvedTheme === "dark";
             const box = dark ? darkVariant(p.box) : p.box;
             const root = dark ? darkVariant(p.root) : p.root;
             return (
               <SelectItem key={p.id} value={p.id}>
-                <span className="flex gap-0.5">
-                  <span className="h-3 w-3 rounded-full" style={{ background: box }} />
-                  <span className="h-3 w-3 rounded-full" style={{ background: root }} />
+                <span className="flex items-center gap-2">
+                  <span className="flex gap-0.5">
+                    <span className="h-3 w-3 rounded-full" style={{ background: box }} />
+                    <span className="h-3 w-3 rounded-full" style={{ background: root }} />
+                  </span>
+                  {p.name}
                 </span>
-                <span className="sr-only">{p.name}</span>
               </SelectItem>
             );
           })}
