@@ -59,7 +59,7 @@ export function BoxTrainer() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+      <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
         <Field label="Key">
           <Select value={keyId} onValueChange={setKeyId}>
             <SelectTrigger className="w-24">
@@ -176,7 +176,7 @@ export function BoxTrainer() {
         </Field>
 
         <Field label="Tempo">
-          <div className="flex items-center gap-3">
+          <div className="flex h-9 items-center gap-3">
             <Slider
               value={[bpm]}
               onValueChange={(v) => setBpm(v[0] ?? bpm)}
