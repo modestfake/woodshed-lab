@@ -103,4 +103,9 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  /* The palette picker shows swatch + name in the dropdown; the trigger mirrors
+     the selected option, so hide the name there to leave just the swatches. */
+  [data-slot="select-trigger"] [data-palette-name] {
+    display: none;
+  }
 }

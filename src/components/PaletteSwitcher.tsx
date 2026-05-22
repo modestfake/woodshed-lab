@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Palette } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useTheme } from "@/components/theme-provider";
 import { PALETTES, darkVariant, readableFg } from "@/lib/palettes";
 
@@ -40,9 +46,6 @@ export function PaletteSwitcher() {
   useHotkeys("down", () => step(1), { preventDefault: true });
 
   const dark = resolvedTheme === "dark";
-  const selected = PALETTES.find((p) => p.id === id) ?? PALETTES[0];
-  const selBox = dark ? darkVariant(selected.box) : selected.box;
-  const selRoot = dark ? darkVariant(selected.root) : selected.root;
 
   return (
     <div
@@ -51,11 +54,8 @@ export function PaletteSwitcher() {
     >
       <Palette className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       <Select value={id} onValueChange={setId}>
-        <SelectTrigger size="sm" className="w-fit" aria-label={`Palette: ${selected.name}`}>
-          <span className="flex gap-0.5">
-            <span className="h-3 w-3 rounded-full" style={{ background: selBox }} />
-            <span className="h-3 w-3 rounded-full" style={{ background: selRoot }} />
-          </span>
+        <SelectTrigger size="sm" className="w-fit">
+          <SelectValue />
         </SelectTrigger>
         <SelectContent align="end" className="max-h-80">
           {PALETTES.map((p) => {
@@ -68,7 +68,7 @@ export function PaletteSwitcher() {
                     <span className="h-3 w-3 rounded-full" style={{ background: box }} />
                     <span className="h-3 w-3 rounded-full" style={{ background: root }} />
                   </span>
-                  {p.name}
+                  <span data-palette-name>{p.name}</span>
                 </span>
               </SelectItem>
             );
