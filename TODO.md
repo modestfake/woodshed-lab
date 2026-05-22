@@ -10,7 +10,7 @@ lot at the bottom. (Curriculum source of truth is `src/exercises.ts`; this is th
 - [ ] **oxlint** (lint) + **oxfmt** (format) — fast; the per-edit / pre-commit gate
 - [ ] **fallow** (`npx fallow` — dead-code / dupes / health / architecture drift) —
       fast enough to include in pre-commit; also a `pnpm health` script + Claude Code MCP
-- [ ] Quick-access `package.json` scripts: `lint`, `format`, `typecheck`, `health` (fallow)
+- [x] Quick-access `package.json` scripts: `lint`, `format`/`format:check`, `typecheck`, `health` (fallow)
 - [ ] **pre-commit hook via lefthook**: oxlint + oxfmt + `tsc` + fallow
 - [ ] Claude Code hook to run oxlint/oxfmt/tsc **after editing files** (settings.json)
 - [ ] First `oxfmt` run reformats everything — commit a checkpoint *before* it so the

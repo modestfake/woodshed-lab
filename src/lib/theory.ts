@@ -2,7 +2,7 @@
 // generalized to any 7-note scale.
 // String indices: 0 = low E (6th string) ... 5 = high E (1st string).
 
-export const LETTERS = ["C", "D", "E", "F", "G", "A", "B"] as const;
+const LETTERS = ["C", "D", "E", "F", "G", "A", "B"] as const;
 
 const NATURAL_PC: Record<string, number> = {
   C: 0,
@@ -75,7 +75,7 @@ export const SCALES: Scale[] = [
   { id: "locrian", label: "Locrian", group: "Modes", offsets: [0, 1, 3, 5, 6, 8, 10] },
 ];
 
-export type ScaleTone = {
+type ScaleTone = {
   degree: number;
   pc: number;
   name: string;
@@ -120,7 +120,7 @@ function scaleSteps(offsets: number[]): number[] {
   return offsets.map((o, i) => mod(offsets[(i + 1) % offsets.length] - o, 12));
 }
 
-export function scaleTones(key: Key, scale: Scale): ScaleTone[] {
+function scaleTones(key: Key, scale: Scale): ScaleTone[] {
   const tonicLetterIdx = LETTERS.indexOf(key.letter as (typeof LETTERS)[number]);
   return scale.offsets.map((off, i) => {
     const pc = mod(key.tonicPc + off, 12);
