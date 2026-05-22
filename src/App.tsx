@@ -1,14 +1,14 @@
-import { useState } from "react"
-import { ExerciseList } from "@/components/ExerciseList"
-import { ModeToggle } from "@/components/ModeToggle"
-import { PaletteSwitcher } from "@/components/PaletteSwitcher"
-import { ShortcutsHelp } from "@/components/ShortcutsHelp"
-import { EXERCISES } from "@/exercises"
+import { useState } from "react";
+import { ExerciseList } from "@/components/ExerciseList";
+import { ModeToggle } from "@/components/ModeToggle";
+import { PaletteSwitcher } from "@/components/PaletteSwitcher";
+import { ShortcutsHelp } from "@/components/ShortcutsHelp";
+import { EXERCISES } from "@/exercises";
 
 function App() {
-  const [selectedId, setSelectedId] = useState("boxes")
-  const exercise = EXERCISES.find((e) => e.id === selectedId) ?? EXERCISES[0]
-  const Body = exercise.component
+  const [selectedId, setSelectedId] = useState("boxes");
+  const exercise = EXERCISES.find((e) => e.id === selectedId) ?? EXERCISES[0];
+  const Body = exercise.component;
 
   return (
     <div className="min-h-svh bg-background">
@@ -39,13 +39,9 @@ function App() {
 
         <main className="min-w-0 flex-1">
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              {exercise.label}
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">{exercise.label}</h2>
             {exercise.description && (
-              <p className="mt-1 text-sm text-muted-foreground">
-                {exercise.description}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{exercise.description}</p>
             )}
           </div>
           {Body ? (
@@ -60,7 +56,7 @@ function App() {
 
       <PaletteSwitcher />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

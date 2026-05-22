@@ -1,13 +1,14 @@
 {
   "name": "woodshed-lab",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.6.5",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -29,8 +30,10 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
-  }
+  },
+  "packageManager": "pnpm@10.6.5"
 }

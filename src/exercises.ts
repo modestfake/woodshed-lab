@@ -1,15 +1,15 @@
-import type { ComponentType } from "react"
-import { BoxTrainer } from "@/components/BoxTrainer"
+import type { ComponentType } from "react";
+import { BoxTrainer } from "@/components/BoxTrainer";
 
 // The full practice curriculum. `component` is set for live exercises; the rest
 // are stubs until built. This registry drives both the sidebar and the main panel.
 export type Exercise = {
-  id: string
-  label: string
-  status: "live" | "soon"
-  description?: string
-  component?: ComponentType
-}
+  id: string;
+  label: string;
+  status: "live" | "soon";
+  description?: string;
+  component?: ComponentType;
+};
 
 export const EXERCISES: Exercise[] = [
   {
@@ -35,4 +35,4 @@ export const EXERCISES: Exercise[] = [
   { id: "pyramid", label: "Pyramid exercise", status: "soon" },
   { id: "modes", label: "Modes on one string", status: "soon" },
   { id: "box-intervals", label: "Box with intervals (6ths)", status: "soon" },
-]
+];
