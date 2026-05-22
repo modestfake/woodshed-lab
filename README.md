@@ -1,73 +1,47 @@
-# React + TypeScript + Vite
+# Woodshed Lab
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive guitar-practice fretboard for jazz students. Phase 1 visualizes the
+Ted Greene **3-notes-per-string box system** across any key and scale.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Fretboard** (frets 0–17, standard tuning) showing the full diatonic map of the
+  selected scale.
+- **7 boxes per scale** — step through them; the active box lights up over the map.
+- **12 keys** with correct enharmonic spelling, plus **major, natural / harmonic /
+  melodic minor, and the diatonic modes**.
+- **Note names ⇄ scale degrees** toggle (`1 2 ♭3 4 5 ♭6 ♭7`).
+- **Click any fret to hear it** — Karplus–Strong string synthesis voiced like a warm
+  jazz neck pickup (no samples, pure Web Audio).
+- **Play the active box** note-by-note, with the playhead highlighted.
+- **Light / dark theme** and a live **palette switcher** (temporary, for design).
 
-## React Compiler
+## Keyboard
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Key | Action |
+| --- | --- |
+| `←` / `→` | switch box |
+| `↑` / `↓` | cycle palette |
+| `T` | toggle light / dark |
+| `Space` | play the box |
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+React + Vite + TypeScript · Tailwind v4 · shadcn/ui · Web Audio.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Develop
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # type-check + production build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Layout
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `src/lib/theory.ts` — the music engine (scales, boxes, spelling); pure, no React.
+- `src/lib/audio.ts` — plucked-string synthesis.
+- `src/exercises.ts` — the curriculum registry (only **Boxes** is live in Phase 1).
+- `src/components/` — UI; `BoxTrainer` is the live exercise, `Fretboard` renders the neck.
+- `CONTEXT.md` — domain glossary (the box-system vocabulary).
+- `docs/adr/` — architecture decision records.

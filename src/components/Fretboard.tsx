@@ -129,6 +129,9 @@ export function Fretboard({
                     <button
                       key={cellKey}
                       onClick={() => onPlay(midi)}
+                      aria-label={`${STRING_LABELS[s]} string, fret ${f}${
+                        note ? `, ${note.name}` : ""
+                      }`}
                       className="group flex cursor-pointer items-center justify-center"
                     >
                       {note ? (

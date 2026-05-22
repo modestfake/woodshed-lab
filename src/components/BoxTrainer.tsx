@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { useMemo, useState, type ReactNode } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { ChevronLeft, ChevronRight, Play, Square } from "lucide-react"
 import { Fretboard, type LabelMode } from "@/components/Fretboard"
@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { usePlayback } from "@/hooks/usePlayback"
 import { playMidi } from "@/lib/audio"
 import {
   BOX_COUNT,
@@ -20,8 +21,8 @@ import {
   SCALES,
   box,
   diatonicMap,
-  key as keyById,
-  scale as scaleById,
+  keyById,
+  scaleById,
 } from "@/lib/theory"
 import { cn } from "@/lib/utils"
 
@@ -32,7 +33,6 @@ export function BoxTrainer() {
   const [scaleId, setScaleId] = useState("major")
   const [boxN, setBoxN] = useState(1)
   const [labelMode, setLabelMode] = useState<LabelMode>("name")
-  const [playingKey, setPlayingKey] = useState<string | null>(null)
 
   const theKey = keyById(keyId)
   const theScale = scaleById(scaleId)
@@ -42,39 +42,7 @@ export function BoxTrainer() {
     [theKey, theScale, boxN],
   )
 
-  const timer = useRef<number | null>(null)
-  const isPlaying = playingKey !== null
-
-  const stop = () => {
-    if (timer.current !== null) {
-      clearInterval(timer.current)
-      timer.current = null
-    }
-    setPlayingKey(null)
-  }
-
-  // Stop any run when the key/scale/box changes, and clean up on unmount.
-  useEffect(() => stop, [keyId, scaleId, boxN])
-
-  const playBox = () => {
-    if (isPlaying) {
-      stop()
-      return
-    }
-    let i = 0
-    const tick = () => {
-      if (i >= active.length) {
-        stop()
-        return
-      }
-      const n = active[i]
-      setPlayingKey(`${n.string}:${n.fret}`)
-      playMidi(n.midi)
-      i++
-    }
-    tick()
-    timer.current = window.setInterval(tick, 300)
-  }
+  const { playingKey, isPlaying, toggle } = usePlayback(active)
 
   const step = (dir: number) =>
     setBoxN((n) => ((n - 1 + dir + BOX_COUNT) % BOX_COUNT) + 1)
@@ -82,7 +50,7 @@ export function BoxTrainer() {
   // ← / → step through the boxes, Space plays the current box.
   useHotkeys("left", () => step(-1), { preventDefault: true })
   useHotkeys("right", () => step(1), { preventDefault: true })
-  useHotkeys("space", () => playBox(), { preventDefault: true })
+  useHotkeys("space", () => toggle(), { preventDefault: true })
 
   return (
     <div className="space-y-6">
@@ -176,7 +144,13 @@ export function BoxTrainer() {
         </Field>
 
         <Field label="Playback">
-          <Button onClick={playBox} className="w-32">
+          <Button
+            onClick={(e) => {
+              toggle()
+              e.currentTarget.blur()
+            }}
+            className="w-32"
+          >
             {isPlaying ? (
               <>
                 <Square className="h-4 w-4 fill-current" /> Stop

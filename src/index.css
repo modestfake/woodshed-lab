@@ -24,10 +24,10 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
 
-  /* Fretboard accent colors (themeable — default palette "Electric Pop"). */
-  --box: #8338ec;
+  /* Fretboard accent colors (themeable — default palette "Magenta Dream"). */
+  --box: #7209b7;
   --box-fg: #ffffff;
-  --root: #ff006e;
+  --root: #f72585;
   --root-fg: #ffffff;
   --box-dim: color-mix(in oklab, var(--box) 15%, transparent);
   --box-dim-fg: color-mix(in oklab, var(--box) 72%, transparent);
@@ -56,10 +56,10 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 
-  /* Pastel accents for dark mode (dark variant of Electric Pop). */
-  --box: #cab7ff;
+  /* Pastel accents for dark mode (dark variant of Magenta Dream). */
+  --box: #d3b3fc;
   --box-fg: #1a1626;
-  --root: #ffa7b7;
+  --root: #fda7c0;
   --root-fg: #1a1626;
 }
 

@@ -178,6 +178,7 @@ export function box(key: Key, scale: Scale, n: number): Note[] {
   return notes
 }
 
-export const key = (id: string): Key => KEYS.find((k) => k.id === id) ?? KEYS[0]
-export const scale = (id: string): Scale =>
+export const keyById = (id: string): Key =>
+  KEYS.find((k) => k.id === id) ?? KEYS[0]
+export const scaleById = (id: string): Scale =>
   SCALES.find((s) => s.id === id) ?? SCALES[0]

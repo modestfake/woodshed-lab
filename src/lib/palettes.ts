@@ -6,13 +6,13 @@
 export type Palette = { id: string; name: string; box: string; root: string }
 
 export const PALETTES: Palette[] = [
-  { id: "default", name: "Electric Pop", box: "#8338ec", root: "#ff006e" },
+  { id: "default", name: "Magenta Dream", box: "#7209b7", root: "#f72585" },
   { id: "ultraviolet", name: "Ultraviolet", box: "#7c3aed", root: "#06b6d4" },
   { id: "cyber-neon", name: "Cyber Neon", box: "#3a86ff", root: "#8338ec" },
   { id: "purple-haze", name: "Purple Haze", box: "#9d4edd", root: "#c77dff" },
   { id: "grape-berry", name: "Grape & Berry", box: "#5a189a", root: "#ff4d6d" },
   { id: "deep-indigo", name: "Deep Indigo", box: "#3f37c9", root: "#4cc9f0" },
-  { id: "magenta-dream", name: "Magenta Dream", box: "#7209b7", root: "#f72585" },
+  { id: "electric-pop", name: "Electric Pop", box: "#8338ec", root: "#ff006e" },
   { id: "ocean", name: "Ocean", box: "#0077b6", root: "#00b4d8" },
   { id: "mint-sky", name: "Mint & Sky", box: "#14b8a6", root: "#38bdf8" },
   { id: "slate-aqua", name: "Slate & Aqua", box: "#3a506b", root: "#5bc0be" },
