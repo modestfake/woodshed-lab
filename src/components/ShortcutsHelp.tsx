@@ -1,18 +1,14 @@
-import { Keyboard } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Kbd } from "@/components/ui/kbd"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Keyboard } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Kbd } from "@/components/ui/kbd";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const SHORTCUTS: { keys: string[]; label: string }[] = [
   { keys: ["←", "→"], label: "Switch boxes" },
   { keys: ["Space"], label: "Play / stop box" },
   { keys: ["↑", "↓"], label: "Cycle palette" },
   { keys: ["T"], label: "Light / dark theme" },
-]
+];
 
 export function ShortcutsHelp() {
   return (
@@ -28,10 +24,7 @@ export function ShortcutsHelp() {
         </div>
         <ul className="space-y-2">
           {SHORTCUTS.map(({ keys, label }) => (
-            <li
-              key={label}
-              className="flex items-center justify-between gap-4 text-sm"
-            >
+            <li key={label} className="flex items-center justify-between gap-4 text-sm">
               <span className="text-muted-foreground">{label}</span>
               <span className="flex shrink-0 gap-1">
                 {keys.map((k) => (
@@ -43,5 +36,5 @@ export function ShortcutsHelp() {
         </ul>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

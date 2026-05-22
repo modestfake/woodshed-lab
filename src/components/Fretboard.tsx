@@ -1,40 +1,31 @@
-import { memo, useMemo } from "react"
-import { MAX_FRET, STRING_LABELS, TUNING, type Note } from "@/lib/theory"
-import { cn } from "@/lib/utils"
+import { memo, useMemo } from "react";
+import { MAX_FRET, STRING_LABELS, TUNING, type Note } from "@/lib/theory";
+import { cn } from "@/lib/utils";
 
-const FRETS = Array.from({ length: MAX_FRET + 1 }, (_, i) => i)
-const INLAYS = [3, 5, 7, 9, 15]
-const DOUBLE_INLAY = 12
+const FRETS = Array.from({ length: MAX_FRET + 1 }, (_, i) => i);
+const INLAYS = [3, 5, 7, 9, 15];
+const DOUBLE_INLAY = 12;
 // Display order is top -> bottom: high e ... low E.
-const ROWS = [5, 4, 3, 2, 1, 0]
+const ROWS = [5, 4, 3, 2, 1, 0];
 
-export type LabelMode = "name" | "degree"
+export type LabelMode = "name" | "degree";
 
 type Props = {
-  map: Note[]
-  active: Note[]
-  labelMode: LabelMode
-  onPlay: (midi: number) => void
-  playingKey?: string | null
-}
+  map: Note[];
+  active: Note[];
+  labelMode: LabelMode;
+  onPlay: (midi: number) => void;
+  playingKey?: string | null;
+};
 
-export function Fretboard({
-  map,
-  active,
-  labelMode,
-  onPlay,
-  playingKey,
-}: Props) {
+export function Fretboard({ map, active, labelMode, onPlay, playingKey }: Props) {
   const mapByCell = useMemo(() => {
-    const m = new Map<string, Note>()
-    for (const n of map) m.set(`${n.string}:${n.fret}`, n)
-    return m
-  }, [map])
+    const m = new Map<string, Note>();
+    for (const n of map) m.set(`${n.string}:${n.fret}`, n);
+    return m;
+  }, [map]);
 
-  const activeSet = useMemo(
-    () => new Set(active.map((n) => `${n.string}:${n.fret}`)),
-    [active],
-  )
+  const activeSet = useMemo(() => new Set(active.map((n) => `${n.string}:${n.fret}`)), [active]);
 
   return (
     <div className="overflow-x-auto pb-1">
@@ -121,10 +112,10 @@ export function Fretboard({
             >
               {ROWS.map((s) =>
                 FRETS.map((f) => {
-                  const cellKey = `${s}:${f}`
-                  const note = mapByCell.get(cellKey)
-                  const isActive = activeSet.has(cellKey)
-                  const midi = TUNING[s] + f
+                  const cellKey = `${s}:${f}`;
+                  const note = mapByCell.get(cellKey);
+                  const isActive = activeSet.has(cellKey);
+                  const midi = TUNING[s] + f;
                   return (
                     <button
                       key={cellKey}
@@ -136,9 +127,7 @@ export function Fretboard({
                     >
                       {note ? (
                         <Dot
-                          label={
-                            labelMode === "name" ? note.name : note.label
-                          }
+                          label={labelMode === "name" ? note.name : note.label}
                           isRoot={note.isRoot}
                           isActive={isActive}
                           isPlaying={playingKey === cellKey}
@@ -147,7 +136,7 @@ export function Fretboard({
                         <span className="h-7 w-7 rounded-full transition-colors group-hover:bg-foreground/5" />
                       )}
                     </button>
-                  )
+                  );
                 }),
               )}
             </div>
@@ -157,10 +146,7 @@ export function Fretboard({
         {/* fret numbers */}
         <div className="flex">
           <div className="w-6 shrink-0" />
-          <div
-            className="grid flex-1"
-            style={{ gridTemplateColumns: "repeat(18, 1fr)" }}
-          >
+          <div className="grid flex-1" style={{ gridTemplateColumns: "repeat(18, 1fr)" }}>
             {FRETS.map((f) => (
               <div
                 key={f}
@@ -178,7 +164,7 @@ export function Fretboard({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const Dot = memo(function Dot({
@@ -187,10 +173,10 @@ const Dot = memo(function Dot({
   isActive,
   isPlaying,
 }: {
-  label: string
-  isRoot: boolean
-  isActive: boolean
-  isPlaying: boolean
+  label: string;
+  isRoot: boolean;
+  isActive: boolean;
+  isPlaying: boolean;
 }) {
   return (
     <span
@@ -208,5 +194,5 @@ const Dot = memo(function Dot({
     >
       {label}
     </span>
-  )
-})
+  );
+});

@@ -1,8 +1,8 @@
-import { useMemo, useState, type ReactNode } from "react"
-import { useHotkeys } from "react-hotkeys-hook"
-import { ChevronLeft, ChevronRight, Info, Play, Square } from "lucide-react"
-import { Fretboard, type LabelMode } from "@/components/Fretboard"
-import { Button } from "@/components/ui/button"
+import { useMemo, useState, type ReactNode } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { ChevronLeft, ChevronRight, Info, Play, Square } from "lucide-react";
+import { Fretboard, type LabelMode } from "@/components/Fretboard";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,46 +11,34 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { usePlayback } from "@/hooks/usePlayback"
-import { playMidi } from "@/lib/audio"
-import {
-  BOX_COUNT,
-  KEYS,
-  SCALES,
-  box,
-  diatonicMap,
-  keyById,
-  scaleById,
-} from "@/lib/theory"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { usePlayback } from "@/hooks/usePlayback";
+import { playMidi } from "@/lib/audio";
+import { BOX_COUNT, KEYS, SCALES, box, diatonicMap, keyById, scaleById } from "@/lib/theory";
+import { cn } from "@/lib/utils";
 
-const SCALE_GROUPS = Array.from(new Set(SCALES.map((s) => s.group)))
+const SCALE_GROUPS = Array.from(new Set(SCALES.map((s) => s.group)));
 
 export function BoxTrainer() {
-  const [keyId, setKeyId] = useState("C")
-  const [scaleId, setScaleId] = useState("major")
-  const [boxN, setBoxN] = useState(1)
-  const [labelMode, setLabelMode] = useState<LabelMode>("name")
+  const [keyId, setKeyId] = useState("C");
+  const [scaleId, setScaleId] = useState("major");
+  const [boxN, setBoxN] = useState(1);
+  const [labelMode, setLabelMode] = useState<LabelMode>("name");
 
-  const theKey = keyById(keyId)
-  const theScale = scaleById(scaleId)
-  const map = useMemo(() => diatonicMap(theKey, theScale), [theKey, theScale])
-  const active = useMemo(
-    () => box(theKey, theScale, boxN),
-    [theKey, theScale, boxN],
-  )
+  const theKey = keyById(keyId);
+  const theScale = scaleById(scaleId);
+  const map = useMemo(() => diatonicMap(theKey, theScale), [theKey, theScale]);
+  const active = useMemo(() => box(theKey, theScale, boxN), [theKey, theScale, boxN]);
 
-  const { playingKey, isPlaying, toggle } = usePlayback(active)
+  const { playingKey, isPlaying, toggle } = usePlayback(active);
 
-  const step = (dir: number) =>
-    setBoxN((n) => ((n - 1 + dir + BOX_COUNT) % BOX_COUNT) + 1)
+  const step = (dir: number) => setBoxN((n) => ((n - 1 + dir + BOX_COUNT) % BOX_COUNT) + 1);
 
   // ← / → step through the boxes, Space plays the current box.
-  useHotkeys("left", () => step(-1), { preventDefault: true })
-  useHotkeys("right", () => step(1), { preventDefault: true })
-  useHotkeys("space", () => toggle(), { preventDefault: true })
+  useHotkeys("left", () => step(-1), { preventDefault: true });
+  useHotkeys("right", () => step(1), { preventDefault: true });
+  useHotkeys("space", () => toggle(), { preventDefault: true });
 
   return (
     <div className="space-y-6">
@@ -116,12 +104,7 @@ export function BoxTrainer() {
                 </button>
               ))}
             </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => step(1)}
-              aria-label="Next box"
-            >
+            <Button variant="outline" size="icon" onClick={() => step(1)} aria-label="Next box">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -146,8 +129,8 @@ export function BoxTrainer() {
         <Field label="Playback">
           <Button
             onClick={(e) => {
-              toggle()
-              e.currentTarget.blur()
+              toggle();
+              e.currentTarget.blur();
             }}
             className="w-32"
           >
@@ -182,16 +165,10 @@ export function BoxTrainer() {
         </span>
       </div>
     </div>
-  )
+  );
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string
-  children: ReactNode
-}) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="space-y-1.5">
       <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -199,7 +176,7 @@ function Field({
       </div>
       {children}
     </div>
-  )
+  );
 }
 
 function Legend({ className, text }: { className: string; text: string }) {
@@ -208,5 +185,5 @@ function Legend({ className, text }: { className: string; text: string }) {
       <span className={cn("h-3.5 w-3.5 rounded-full", className)} />
       {text}
     </span>
-  )
+  );
 }

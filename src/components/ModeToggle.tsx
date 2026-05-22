@@ -1,14 +1,14 @@
-import { useHotkeys } from "react-hotkeys-hook"
-import { Moon, Sun } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTheme } from "@/components/theme-provider"
+import { useHotkeys } from "react-hotkeys-hook";
+import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/theme-provider";
 
 export function ModeToggle() {
-  const { resolvedTheme, setTheme } = useTheme()
-  const isDark = resolvedTheme === "dark"
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
-  const toggle = () => setTheme(isDark ? "light" : "dark")
-  useHotkeys("t", toggle, { preventDefault: true })
+  const toggle = () => setTheme(isDark ? "light" : "dark");
+  useHotkeys("t", toggle, { preventDefault: true });
 
   return (
     <Button
@@ -20,5 +20,5 @@ export function ModeToggle() {
     >
       {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
     </Button>
-  )
+  );
 }

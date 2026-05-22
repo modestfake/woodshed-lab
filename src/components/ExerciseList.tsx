@@ -1,12 +1,12 @@
-import { EXERCISES } from "@/exercises"
-import { cn } from "@/lib/utils"
+import { EXERCISES } from "@/exercises";
+import { cn } from "@/lib/utils";
 
 export function ExerciseList({
   selected,
   onSelect,
 }: {
-  selected: string
-  onSelect: (id: string) => void
+  selected: string;
+  onSelect: (id: string) => void;
 }) {
   return (
     <nav className="space-y-1">
@@ -14,8 +14,8 @@ export function ExerciseList({
         Curriculum
       </div>
       {EXERCISES.map((ex) => {
-        const live = ex.status === "live"
-        const isActive = ex.id === selected
+        const live = ex.status === "live";
+        const isActive = ex.id === selected;
         return (
           <button
             key={ex.id}
@@ -38,8 +38,8 @@ export function ExerciseList({
               </span>
             )}
           </button>
-        )
+        );
       })}
     </nav>
-  )
+  );
 }
