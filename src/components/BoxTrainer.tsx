@@ -1,6 +1,15 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { ChevronLeft, ChevronRight, Info, Play, Square } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ChevronLeft,
+  ChevronRight,
+  Info,
+  Play,
+  Repeat,
+  Square,
+} from "lucide-react";
 import { Fretboard, type LabelMode } from "@/components/Fretboard";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -15,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { usePlayback } from "@/hooks/usePlayback";
+import { usePlayback, type PlayMode } from "@/hooks/usePlayback";
 import { playMidi } from "@/lib/audio";
 import {
   BOX_COUNT,
@@ -41,6 +50,7 @@ export function BoxTrainer() {
   const [boxN, setBoxN] = useState(1);
   const [labelMode, setLabelMode] = useState<LabelMode>("name");
   const [bpm, setBpm] = useState(120);
+  const [playMode, setPlayMode] = useState<PlayMode>("asc");
 
   const theKey = keyById(keyId);
   const theScale = scaleById(scaleId);
@@ -48,7 +58,11 @@ export function BoxTrainer() {
   const active = useMemo(() => box(theKey, theScale, boxN), [theKey, theScale, boxN]);
   const activeBoxName = boxModeName(theScale, boxN);
 
-  const { playingKey, isPlaying, toggle } = usePlayback(active, 60000 / (bpm * NOTES_PER_BEAT));
+  const { playingKey, isPlaying, toggle } = usePlayback(
+    active,
+    60000 / (bpm * NOTES_PER_BEAT),
+    playMode,
+  );
 
   const step = (dir: number) => setBoxN((n) => ((n - 1 + dir + BOX_COUNT) % BOX_COUNT) + 1);
 
@@ -173,6 +187,35 @@ export function BoxTrainer() {
               </>
             )}
           </Button>
+        </Field>
+
+        <Field label="Direction">
+          <ToggleGroup
+            type="single"
+            value={playMode}
+            onValueChange={(v) => v && setPlayMode(v as PlayMode)}
+            variant="outline"
+          >
+            <ToggleGroupItem value="asc" aria-label="Ascending" title="Ascending" className="px-3">
+              <ArrowUp className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="desc"
+              aria-label="Descending"
+              title="Descending"
+              className="px-3"
+            >
+              <ArrowDown className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="loop"
+              aria-label="Loop back and forth"
+              title="Loop (back & forth)"
+              className="px-3"
+            >
+              <Repeat className="h-4 w-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
         </Field>
 
         <Field label="Tempo">

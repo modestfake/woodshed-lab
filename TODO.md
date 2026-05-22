@@ -49,7 +49,7 @@ to `status: "live"`.
       ties into the chromatic-targeting exercise
 - [x] Tempo control for box playback — BPM slider (40–240), notes as eighth-note triplets
       (3/beat); tempo is read live so the slider changes speed mid-playback
-- [ ] Ascending / descending (and loop) playback toggle
+- [x] Ascending / descending / loop (ping-pong) playback toggle — Direction control in BoxTrainer
 - [ ] Per-box tinting in the dim layer so you can see boxes interlock
 - [ ] Highlight a selected root and show intervals from it
 - [ ] Alternate tunings / capo (TUNING is already data-driven in `theory.ts`)
