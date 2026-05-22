@@ -10,6 +10,7 @@ import {
   Music,
   Play,
   Repeat,
+  Shuffle,
   Square,
 } from "lucide-react";
 import { Fretboard, type LabelMode } from "@/components/Fretboard";
@@ -218,6 +219,14 @@ export function BoxTrainer() {
               className="px-3"
             >
               <Repeat className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="random"
+              aria-label="Shuffle (random order)"
+              title="Shuffle (random order)"
+              className="px-3"
+            >
+              <Shuffle className="h-4 w-4" />
             </ToggleGroupItem>
           </ToggleGroup>
         </Field>

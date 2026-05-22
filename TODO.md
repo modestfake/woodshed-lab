@@ -42,7 +42,9 @@ to `status: "live"`.
 - [x] **Box mode names** — hover a box number for its mode (Ionian…Locrian); the active box
       shows a caption. Rotates for the diatonic modes; hidden for harmonic/melodic minor.
 - [ ] **Circle-of-fifths key picker** — replace the Key `<Select>` with a clickable circle of fifths
-- [ ] **Box playback randomizer** — play the box's notes in random order (ear training)
+- [x] **Box playback randomizer** — Shuffle mode in the Direction toggle; random order, no
+      immediate repeats, random rests (~30%) so it phrases instead of running flat, runs
+      until stopped (ear training)
 - [ ] Icons on the **Notes / Degrees** toggle
 - [ ] Hover an out-of-scale fret → faint **ghost label**: chromatic note name (Notes
       mode) / chromatic degree like `♯4`, `♭7` (Degrees mode). Dots stay scale-only;
