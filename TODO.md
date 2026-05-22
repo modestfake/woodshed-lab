@@ -45,7 +45,7 @@ to `status: "live"`.
 - [x] **Box playback randomizer** — Shuffle mode in the Direction toggle; random order, no
       immediate repeats, random rests (~30%) so it phrases instead of running flat, runs
       until stopped (ear training)
-- [ ] Icons on the **Notes / Degrees** toggle
+- [x] Icons on the **Notes / Degrees** toggle — Music glyph for Notes, ListOrdered for degrees
 - [x] Hover an out-of-scale fret → faint **ghost label**: chromatic note name (Notes
       mode) / chromatic degree like `♯4`, `♭7` (Degrees mode). Dots stay scale-only.
       (`chromaticLabel` in theory.ts; still ties into the chromatic-targeting exercise)
@@ -65,7 +65,7 @@ to `status: "live"`.
 
 - [ ] **Audit shadcn usage** — are we reaching for the right components? e.g. the left nav
       could be a shadcn sidebar / navigation-menu instead of hand-rolled buttons
-- [ ] **Curate palettes** — keep just a few good ones, drop the rest
+- [x] **Curate palettes** — keep just a few good ones, drop the rest (done — see Polish & tech debt)
 - [x] **Better keybindings hint** — shadcn `Popover` + `Kbd` in the header (`ShortcutsHelp`)
 - [ ] Revisit overall design once a couple exercises exist (look for shared patterns;
       possibly with Pencil)
