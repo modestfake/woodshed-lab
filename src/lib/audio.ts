@@ -58,9 +58,18 @@ function pluck(ac: AudioContext, freq: number): AudioBuffer {
   return buffer;
 }
 
-export function playMidi(midi: number) {
+export async function playMidi(midi: number) {
   const ac = context();
-  if (ac.state === "suspended") void ac.resume();
+  // Browsers suspend the AudioContext after idle, freezing currentTime. Resume
+  // and wait before scheduling, or the note queues at the stale time and fires
+  // late — doubled with whatever else was waiting — once the clock catches up.
+  if (ac.state === "suspended") {
+    try {
+      await ac.resume();
+    } catch {
+      // resume rejects without a user gesture; the next click retries.
+    }
+  }
 
   const freq = 440 * Math.pow(2, (midi - 69) / 12);
 
