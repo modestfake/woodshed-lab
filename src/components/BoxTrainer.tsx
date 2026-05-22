@@ -13,9 +13,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { usePlayback } from "@/hooks/usePlayback";
 import { playMidi } from "@/lib/audio";
-import { BOX_COUNT, KEYS, SCALES, box, diatonicMap, keyById, scaleById } from "@/lib/theory";
+import {
+  BOX_COUNT,
+  KEYS,
+  SCALES,
+  box,
+  boxModeName,
+  diatonicMap,
+  keyById,
+  scaleById,
+} from "@/lib/theory";
 import { cn } from "@/lib/utils";
 
 const SCALE_GROUPS = Array.from(new Set(SCALES.map((s) => s.group)));
@@ -30,6 +40,7 @@ export function BoxTrainer() {
   const theScale = scaleById(scaleId);
   const map = useMemo(() => diatonicMap(theKey, theScale), [theKey, theScale]);
   const active = useMemo(() => box(theKey, theScale, boxN), [theKey, theScale, boxN]);
+  const activeBoxName = boxModeName(theScale, boxN);
 
   const { playingKey, isPlaying, toggle } = usePlayback(active);
 
@@ -89,25 +100,37 @@ export function BoxTrainer() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="flex gap-1">
-              {Array.from({ length: BOX_COUNT }, (_, i) => i + 1).map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setBoxN(n)}
-                  className={cn(
-                    "h-9 w-9 rounded-md border text-sm font-semibold transition-colors",
-                    n === boxN
-                      ? "border-[var(--box)] bg-[var(--box)] text-[var(--box-fg)]"
-                      : "border-input bg-background hover:bg-accent",
-                  )}
-                >
-                  {n}
-                </button>
-              ))}
+              {Array.from({ length: BOX_COUNT }, (_, i) => i + 1).map((n) => {
+                const name = boxModeName(theScale, n);
+                return (
+                  <Tooltip key={n}>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => setBoxN(n)}
+                        className={cn(
+                          "h-9 w-9 rounded-md border text-sm font-semibold transition-colors",
+                          n === boxN
+                            ? "border-[var(--box)] bg-[var(--box)] text-[var(--box-fg)]"
+                            : "border-input bg-background hover:bg-accent",
+                        )}
+                      >
+                        {n}
+                      </button>
+                    </TooltipTrigger>
+                    {name && <TooltipContent>{name}</TooltipContent>}
+                  </Tooltip>
+                );
+              })}
             </div>
             <Button variant="outline" size="icon" onClick={() => step(1)} aria-label="Next box">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
+          {activeBoxName && (
+            <p className="text-xs text-muted-foreground">
+              Box {boxN} · <span className="font-medium text-foreground">{activeBoxName}</span>
+            </p>
+          )}
         </Field>
 
         <Field label="Labels">

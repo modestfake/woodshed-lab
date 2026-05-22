@@ -188,5 +188,38 @@ export function box(key: Key, scale: Scale, n: number): Note[] {
   return notes;
 }
 
+// The seven boxes of the major scale are the seven diatonic modes, in order.
+// The other diatonic modes are just rotations of this list.
+const MODE_NAMES = [
+  "Ionian",
+  "Dorian",
+  "Phrygian",
+  "Lydian",
+  "Mixolydian",
+  "Aeolian",
+  "Locrian",
+] as const;
+
+// How far each diatonic scale is rotated from Ionian (major). Harmonic and
+// melodic minor aren't rotations of the major scale, so they're absent here.
+const MODE_ROTATION: Record<string, number> = {
+  major: 0,
+  dorian: 1,
+  phrygian: 2,
+  lydian: 3,
+  mixolydian: 4,
+  "natural-minor": 5,
+  locrian: 6,
+};
+
+// Name of box `n` (1..7) for `scale`: the diatonic mode that box's shape plays.
+// Returns null for non-diatonic scales (harmonic/melodic minor), which have no
+// standard mode name.
+export function boxModeName(scale: Scale, n: number): string | null {
+  const rot = MODE_ROTATION[scale.id];
+  if (rot === undefined) return null;
+  return MODE_NAMES[mod(rot + n - 1, 7)];
+}
+
 export const keyById = (id: string): Key => KEYS.find((k) => k.id === id) ?? KEYS[0];
 export const scaleById = (id: string): Scale => SCALES.find((s) => s.id === id) ?? SCALES[0];

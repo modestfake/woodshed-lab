@@ -39,6 +39,8 @@ to `status: "live"`.
 
 ## Features & enhancements
 
+- [x] **Box mode names** — hover a box number for its mode (Ionian…Locrian); the active box
+      shows a caption. Rotates for the diatonic modes; hidden for harmonic/melodic minor.
 - [ ] **Circle-of-fifths key picker** — replace the Key `<Select>` with a clickable circle of fifths
 - [ ] **Box playback randomizer** — play the box's notes in random order (ear training)
 - [ ] Icons on the **Notes / Degrees** toggle
