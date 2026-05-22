@@ -46,9 +46,9 @@ to `status: "live"`.
       immediate repeats, random rests (~30%) so it phrases instead of running flat, runs
       until stopped (ear training)
 - [ ] Icons on the **Notes / Degrees** toggle
-- [ ] Hover an out-of-scale fret → faint **ghost label**: chromatic note name (Notes
-      mode) / chromatic degree like `♯4`, `♭7` (Degrees mode). Dots stay scale-only;
-      ties into the chromatic-targeting exercise
+- [x] Hover an out-of-scale fret → faint **ghost label**: chromatic note name (Notes
+      mode) / chromatic degree like `♯4`, `♭7` (Degrees mode). Dots stay scale-only.
+      (`chromaticLabel` in theory.ts; still ties into the chromatic-targeting exercise)
 - [x] Tempo control for box playback — BPM slider (40–240), notes as eighth-note triplets
       (3/beat); tempo is read live so the slider changes speed mid-playback
 - [x] Ascending / descending / loop (ping-pong) playback toggle — Direction control in BoxTrainer

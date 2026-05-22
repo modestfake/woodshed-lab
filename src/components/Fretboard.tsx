@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { MAX_FRET, STRING_LABELS, TUNING, type Note } from "@/lib/theory";
+import { MAX_FRET, STRING_LABELS, TUNING, chromaticLabel, type Key, type Note } from "@/lib/theory";
 import { cn } from "@/lib/utils";
 
 const FRETS = Array.from({ length: MAX_FRET + 1 }, (_, i) => i);
@@ -13,12 +13,13 @@ export type LabelMode = "name" | "degree";
 type Props = {
   map: Note[];
   active: Note[];
+  theKey: Key;
   labelMode: LabelMode;
   onPlay: (midi: number) => void;
   playingKey?: string | null;
 };
 
-export function Fretboard({ map, active, labelMode, onPlay, playingKey }: Props) {
+export function Fretboard({ map, active, theKey, labelMode, onPlay, playingKey }: Props) {
   const mapByCell = useMemo(() => {
     const m = new Map<string, Note>();
     for (const n of map) m.set(`${n.string}:${n.fret}`, n);
@@ -116,12 +117,13 @@ export function Fretboard({ map, active, labelMode, onPlay, playingKey }: Props)
                   const note = mapByCell.get(cellKey);
                   const isActive = activeSet.has(cellKey);
                   const midi = TUNING[s] + f;
+                  const ghost = note ? null : chromaticLabel(theKey, midi % 12);
                   return (
                     <button
                       key={cellKey}
                       onClick={() => onPlay(midi)}
-                      aria-label={`${STRING_LABELS[s]} string, fret ${f}${
-                        note ? `, ${note.name}` : ""
+                      aria-label={`${STRING_LABELS[s]} string, fret ${f}, ${
+                        note ? note.name : ghost!.name
                       }`}
                       className="group flex cursor-pointer items-center justify-center"
                     >
@@ -133,7 +135,11 @@ export function Fretboard({ map, active, labelMode, onPlay, playingKey }: Props)
                           isPlaying={playingKey === cellKey}
                         />
                       ) : (
-                        <span className="h-7 w-7 rounded-full transition-colors group-hover:bg-foreground/5" />
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full transition-colors group-hover:bg-foreground/5">
+                          <span className="text-[11px] font-medium tabular-nums text-muted-foreground opacity-0 transition-opacity duration-150 group-hover:opacity-60">
+                            {labelMode === "name" ? ghost!.name : ghost!.degree}
+                          </span>
+                        </span>
                       )}
                     </button>
                   );

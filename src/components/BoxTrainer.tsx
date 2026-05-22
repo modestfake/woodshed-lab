@@ -273,6 +273,7 @@ export function BoxTrainer() {
       <Fretboard
         map={map}
         active={active}
+        theKey={theKey}
         labelMode={labelMode}
         onPlay={playMidi}
         playingKey={playingKey}

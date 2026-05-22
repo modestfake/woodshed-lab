@@ -115,6 +115,32 @@ function degreeLabel(offset: number, degreeIndex: number): string {
   return acc + (degreeIndex + 1);
 }
 
+// Chromatic spelling for each semitone offset from the tonic (0..11): which
+// letter step it sits on, and its degree label. Conventional jazz spelling —
+// flats for ♭2/♭3/♭6/♭7, ♯4 for the tritone.
+const CHROMATIC: { step: number; degree: string }[] = [
+  { step: 0, degree: "1" },
+  { step: 1, degree: "♭2" },
+  { step: 1, degree: "2" },
+  { step: 2, degree: "♭3" },
+  { step: 2, degree: "3" },
+  { step: 3, degree: "4" },
+  { step: 3, degree: "♯4" },
+  { step: 4, degree: "5" },
+  { step: 5, degree: "♭6" },
+  { step: 5, degree: "6" },
+  { step: 6, degree: "♭7" },
+  { step: 6, degree: "7" },
+];
+
+// Label any pitch class relative to a key: spelled note name + chromatic degree.
+// Used for ghost labels on out-of-scale frets.
+export function chromaticLabel(key: Key, pc: number): { name: string; degree: string } {
+  const { step, degree } = CHROMATIC[mod(pc - key.tonicPc, 12)];
+  const tonicLetterIdx = LETTERS.indexOf(key.letter as (typeof LETTERS)[number]);
+  return { name: spell(tonicLetterIdx + step, pc), degree };
+}
+
 // Semitones from each degree to the next (wrapping over the octave).
 function scaleSteps(offsets: number[]): number[] {
   return offsets.map((o, i) => mod(offsets[(i + 1) % offsets.length] - o, 12));
