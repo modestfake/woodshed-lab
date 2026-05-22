@@ -6,6 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Info,
+  ListOrdered,
+  Music,
   Play,
   Repeat,
   Square,
@@ -160,10 +162,12 @@ export function BoxTrainer() {
             onValueChange={(v) => v && setLabelMode(v as LabelMode)}
             variant="outline"
           >
-            <ToggleGroupItem value="name" className="px-3">
+            <ToggleGroupItem value="name" className="gap-1.5 px-3">
+              <Music className="h-4 w-4" />
               Notes
             </ToggleGroupItem>
-            <ToggleGroupItem value="degree" className="px-3">
+            <ToggleGroupItem value="degree" className="gap-1.5 px-3">
+              <ListOrdered className="h-4 w-4" />
               Degrees
             </ToggleGroupItem>
           </ToggleGroup>
