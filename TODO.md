@@ -66,8 +66,8 @@ to `status: "live"`.
 - [x] **Better keybindings hint** — shadcn `Popover` + `Kbd` in the header (`ShortcutsHelp`)
 - [ ] Revisit overall design once a couple exercises exist (look for shared patterns;
       possibly with Pencil)
-- [ ] **Header cleanup** — drop in the new logo; consider removing the subtitle
-      (it's box-specific, not app-wide)
+- [ ] **Header cleanup** — subtitle removed (was box-specific); still need to drop in the
+      new logo once it's ready
 - [ ] Logo — Pencil prompt drafted; pick a direction, generate, wire into header + favicon
 - [ ] Replace the default Vite `favicon.svg`
 
