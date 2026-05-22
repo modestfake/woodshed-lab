@@ -58,6 +58,22 @@ function pluck(ac: AudioContext, freq: number): AudioBuffer {
   return buffer;
 }
 
+// Synthetic impulse response for a small room: stereo decaying noise. Built
+// once and cached — the convolver reuses it for every note.
+let ir: AudioBuffer | null = null;
+function reverbIR(ac: AudioContext): AudioBuffer {
+  if (ir) return ir;
+  const sr = ac.sampleRate;
+  const len = Math.floor(sr * 1.4); // ~1.4s tail — a room, not a hall
+  const buf = ac.createBuffer(2, len, sr);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+  }
+  ir = buf;
+  return buf;
+}
+
 export async function playMidi(midi: number) {
   const ac = context();
   // Browsers suspend the AudioContext after idle, freezing currentTime. Resume
@@ -76,12 +92,12 @@ export async function playMidi(midi: number) {
   const src = ac.createBufferSource();
   src.buffer = pluck(ac, freq);
 
-  // Neck pickup with the tone rolled well down: one smooth lowpass darkens the
-  // highs while leaving enough harmonics for a real, round string tone.
+  // Neck pickup with the tone rolled most of the way down — a dark, mellow
+  // archtop voicing. Low cutoff + gentle Q for a smooth, jazzy roll-off.
   const lp = ac.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 780;
-  lp.Q.value = 0.9;
+  lp.frequency.value = 560;
+  lp.Q.value = 0.7;
 
   // A low-mid lift fills out the body for a round, woody tone.
   const body = ac.createBiquadFilter();
@@ -93,6 +109,17 @@ export async function playMidi(midi: number) {
   const gain = ac.createGain();
   gain.gain.value = 0.9;
 
-  src.connect(lp).connect(body).connect(gain).connect(ac.destination);
+  // Small-room reverb mixed low under the dry signal — a touch of space, the
+  // tail already dark since it's tapped after the lowpass.
+  const dry = ac.createGain();
+  dry.gain.value = 0.85;
+  const wet = ac.createGain();
+  wet.gain.value = 0.22;
+  const verb = ac.createConvolver();
+  verb.buffer = reverbIR(ac);
+
+  src.connect(lp).connect(body).connect(gain);
+  gain.connect(dry).connect(ac.destination);
+  gain.connect(verb).connect(wet).connect(ac.destination);
   src.start();
 }
