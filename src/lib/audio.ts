@@ -89,6 +89,10 @@ export async function playMidi(midi: number) {
 
   const freq = 440 * Math.pow(2, (midi - 69) / 12);
 
+  // Per-note velocity so playback breathes instead of machine-gunning one
+  // level. A harder pluck is louder and brighter, so it also nudges the cutoff.
+  const velocity = 0.66 + Math.random() * 0.29; // 0.66–0.95
+
   const src = ac.createBufferSource();
   src.buffer = pluck(ac, freq);
 
@@ -96,7 +100,7 @@ export async function playMidi(midi: number) {
   // archtop voicing. Low cutoff + gentle Q for a smooth, jazzy roll-off.
   const lp = ac.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 560;
+  lp.frequency.value = 500 + velocity * 100; // ~566–595Hz, brighter when louder
   lp.Q.value = 0.7;
 
   // A low-mid lift fills out the body for a round, woody tone.
@@ -107,7 +111,7 @@ export async function playMidi(midi: number) {
   body.Q.value = 0.8;
 
   const gain = ac.createGain();
-  gain.gain.value = 0.9;
+  gain.gain.value = velocity;
 
   // Small-room reverb mixed low under the dry signal — a touch of space, the
   // tail already dark since it's tapped after the lowpass.
