@@ -47,7 +47,8 @@ to `status: "live"`.
 - [ ] Hover an out-of-scale fret → faint **ghost label**: chromatic note name (Notes
       mode) / chromatic degree like `♯4`, `♭7` (Degrees mode). Dots stay scale-only;
       ties into the chromatic-targeting exercise
-- [ ] Tempo control for box playback (BPM slider; currently fixed `STEP_MS = 300`)
+- [x] Tempo control for box playback — BPM slider (40–240), notes as eighth-note triplets
+      (3/beat); tempo is read live so the slider changes speed mid-playback
 - [ ] Ascending / descending (and loop) playback toggle
 - [ ] Per-box tinting in the dim layer so you can see boxes interlock
 - [ ] Highlight a selected root and show intervals from it

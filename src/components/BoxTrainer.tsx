@@ -3,6 +3,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { ChevronLeft, ChevronRight, Info, Play, Square } from "lucide-react";
 import { Fretboard, type LabelMode } from "@/components/Fretboard";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -30,11 +31,16 @@ import { cn } from "@/lib/utils";
 
 const SCALE_GROUPS = Array.from(new Set(SCALES.map((s) => s.group)));
 
+// Playback plays the box as eighth-note triplets — 3 notes per beat, so one
+// string lands per beat, the natural feel for a 3-notes-per-string box.
+const NOTES_PER_BEAT = 3;
+
 export function BoxTrainer() {
   const [keyId, setKeyId] = useState("C");
   const [scaleId, setScaleId] = useState("major");
   const [boxN, setBoxN] = useState(1);
   const [labelMode, setLabelMode] = useState<LabelMode>("name");
+  const [bpm, setBpm] = useState(120);
 
   const theKey = keyById(keyId);
   const theScale = scaleById(scaleId);
@@ -42,7 +48,7 @@ export function BoxTrainer() {
   const active = useMemo(() => box(theKey, theScale, boxN), [theKey, theScale, boxN]);
   const activeBoxName = boxModeName(theScale, boxN);
 
-  const { playingKey, isPlaying, toggle } = usePlayback(active);
+  const { playingKey, isPlaying, toggle } = usePlayback(active, 60000 / (bpm * NOTES_PER_BEAT));
 
   const step = (dir: number) => setBoxN((n) => ((n - 1 + dir + BOX_COUNT) % BOX_COUNT) + 1);
 
@@ -167,6 +173,20 @@ export function BoxTrainer() {
               </>
             )}
           </Button>
+        </Field>
+
+        <Field label="Tempo">
+          <div className="flex items-center gap-3">
+            <Slider
+              value={[bpm]}
+              onValueChange={(v) => setBpm(v[0] ?? bpm)}
+              min={40}
+              max={240}
+              step={5}
+              className="w-32"
+            />
+            <span className="w-16 text-sm tabular-nums text-muted-foreground">{bpm} BPM</span>
+          </div>
         </Field>
       </div>
 
