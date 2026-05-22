@@ -1,0 +1,18 @@
+# Pre-commit gate. Formatters/linters run on staged files and re-stage their
+# fixes; typecheck and fallow run project-wide (they can't be file-scoped).
+# fallow here only reports (dead-code/dupes) and blocks — it never auto-deletes.
+pre-commit:
+  parallel: false
+  commands:
+    oxfmt:
+      glob: "*.{ts,tsx,css,json,html}"
+      run: pnpm exec oxfmt {staged_files}
+      stage_fixed: true
+    oxlint:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec oxlint --fix {staged_files}
+      stage_fixed: true
+    typecheck:
+      run: pnpm exec tsc -b
+    fallow:
+      run: pnpm exec fallow dead-code && pnpm exec fallow dupes

@@ -8,12 +8,12 @@ lot at the bottom. (Curriculum source of truth is `src/exercises.ts`; this is th
 
 - [x] Switch package manager to **pnpm** (do this first — scripts/hooks below build on it)
 - [ ] **oxlint** (lint) + **oxfmt** (format) — fast; the per-edit / pre-commit gate
-- [ ] **fallow** (`npx fallow` — dead-code / dupes / health / architecture drift) —
-      fast enough to include in pre-commit; also a `pnpm health` script + Claude Code MCP
+- [x] **fallow** (dead-code / dupes / health / architecture drift) — in the lefthook
+      pre-commit gate (`dead-code` + `dupes`); `pnpm health` (`fallow audit`) + MCP registered
 - [x] Quick-access `package.json` scripts: `lint`, `format`/`format:check`, `typecheck`, `health` (fallow)
-- [ ] **pre-commit hook via lefthook**: oxlint + oxfmt + `tsc` + fallow
+- [x] **pre-commit hook via lefthook**: oxfmt + oxlint on staged files, `tsc -b` + fallow project-wide
 - [ ] Claude Code hook to run oxlint/oxfmt/tsc **after editing files** (settings.json)
-- [ ] First `oxfmt` run reformats everything — commit a checkpoint *before* it so the
+- [x] First `oxfmt` run reformats everything — commit a checkpoint *before* it so the
       reformat lands as its own commit
 
 ## Phase 2 — exercises to build

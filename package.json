@@ -10,7 +10,7 @@
     "typecheck": "tsc -b",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "health": "fallow",
+    "health": "fallow audit",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "fallow": "^2.78.1",
+    "lefthook": "^2.1.8",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
     "typescript": "~6.0.2",
@@ -39,6 +40,9 @@
   },
   "packageManager": "pnpm@10.6.5",
   "pnpm": {
-    "onlyBuiltDependencies": ["fallow"]
+    "onlyBuiltDependencies": [
+      "fallow",
+      "lefthook"
+    ]
   }
 }
