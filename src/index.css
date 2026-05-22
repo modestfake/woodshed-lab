@@ -24,10 +24,10 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
 
-  /* Fretboard accent colors (themeable — default palette "Magenta Dream"). */
-  --box: #7209b7;
+  /* Fretboard accent colors (themeable — default palette "Grape & Berry"). */
+  --box: #5a189a;
   --box-fg: #ffffff;
-  --root: #f72585;
+  --root: #ff4d6d;
   --root-fg: #ffffff;
   --box-dim: color-mix(in oklab, var(--box) 15%, var(--background));
   --box-dim-fg: color-mix(in oklab, var(--box) 72%, transparent);
@@ -56,10 +56,10 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 
-  /* Pastel accents for dark mode (dark variant of Magenta Dream). */
-  --box: #d3b3fc;
+  /* Pastel accents for dark mode (dark variant of Grape & Berry). */
+  --box: #cfb5fe;
   --box-fg: #1a1626;
-  --root: #fda7c0;
+  --root: #ffa8af;
   --root-fg: #1a1626;
 }
 
