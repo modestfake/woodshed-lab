@@ -29,9 +29,9 @@
   --box-fg: #ffffff;
   --root: #f72585;
   --root-fg: #ffffff;
-  --box-dim: color-mix(in oklab, var(--box) 15%, transparent);
+  --box-dim: color-mix(in oklab, var(--box) 15%, var(--background));
   --box-dim-fg: color-mix(in oklab, var(--box) 72%, transparent);
-  --root-dim: color-mix(in oklab, var(--root) 15%, transparent);
+  --root-dim: color-mix(in oklab, var(--root) 15%, var(--background));
   --root-dim-fg: color-mix(in oklab, var(--root) 78%, transparent);
   --root-ring: color-mix(in oklab, var(--root) 50%, white);
 }
