@@ -98,4 +98,9 @@
     font-family: ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
+  /* Tailwind v4 stopped forcing pointer on buttons; restore it for clickability. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
