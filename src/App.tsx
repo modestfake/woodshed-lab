@@ -15,9 +15,7 @@ function App() {
       <header className="border-b">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--box)] font-bold text-[var(--box-fg)]">
-              ♭
-            </div>
+            <img src="/favicon.svg" alt="" className="h-8 w-8" />
             <h1 className="text-lg font-semibold">Woodshed Lab</h1>
           </div>
           <div className="flex items-center gap-1">

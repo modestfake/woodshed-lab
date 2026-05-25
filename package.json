@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
+    "icons": "node scripts/gen-icons.mjs",
     "health": "fallow audit",
     "preview": "vite preview"
   },
@@ -35,6 +36,8 @@
     "lefthook": "^2.1.8",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
   },
