@@ -49,7 +49,7 @@ export function PaletteSwitcher() {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-50 flex items-center gap-1.5 rounded-md border bg-background/90 px-2 py-1.5 shadow-lg backdrop-blur"
+      className="fixed bottom-20 right-4 z-50 flex items-center gap-1.5 rounded-md border bg-background/90 px-2 py-1.5 shadow-lg backdrop-blur"
       title="↑ / ↓ to cycle palettes"
     >
       <Palette className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />

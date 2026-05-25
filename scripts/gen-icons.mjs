@@ -35,5 +35,8 @@ for (const [name, svg, size] of targets) {
 
 // favicon.ico bundles 16/32/48 from the rounded mark for legacy fallbacks.
 const ico = [16, 32, 48];
-await writeFile(resolve(pub, "favicon.ico"), await pngToIco(await Promise.all(ico.map((s) => render(rounded, s)))));
+await writeFile(
+  resolve(pub, "favicon.ico"),
+  await pngToIco(await Promise.all(ico.map((s) => render(rounded, s)))),
+);
 console.log(`wrote favicon.ico (${ico.join("/")})`);
