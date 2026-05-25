@@ -76,10 +76,11 @@ to `status: "live"`.
 - [x] **Better keybindings hint** — shadcn `Popover` + `Kbd` in the header (`ShortcutsHelp`)
 - [ ] Revisit overall design once a couple exercises exist (look for shared patterns;
       possibly with Pencil)
-- [ ] **Header cleanup** — subtitle removed (was box-specific); still need to drop in the
-      new logo once it's ready
-- [ ] Logo — Pencil prompt drafted; pick a direction, generate, wire into header + favicon
-- [ ] Replace the default Vite `favicon.svg`
+- [x] **Header cleanup** — subtitle removed (was box-specific); brand logo now sits next to
+      the title in the header
+- [x] Logo — brand mark (fretboard strings + dots, grape/berry) generated and wired into the
+      header + full favicon/icon set + PWA manifest
+- [x] Replace the default Vite `favicon.svg`
 
 ## Content & docs
 
