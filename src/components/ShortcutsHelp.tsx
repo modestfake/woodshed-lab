@@ -1,4 +1,4 @@
-import { Keyboard } from "lucide-react";
+import { Command } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,8 +14,9 @@ export function ShortcutsHelp() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Keyboard shortcuts">
-          <Keyboard className="h-5 w-5" />
+        <Button variant="outline" size="sm" className="gap-1.5" aria-label="Keyboard shortcuts">
+          <Command className="h-4 w-4" />
+          Shortcuts
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64">

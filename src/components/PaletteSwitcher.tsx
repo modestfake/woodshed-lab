@@ -1,79 +1,63 @@
-import { useEffect, useState } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
-import { Palette } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useTheme } from "@/components/theme-provider";
-import { PALETTES, darkVariant, readableFg } from "@/lib/palettes";
+import { Palette as PaletteIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { usePalette } from "@/components/palette-provider";
 
-// Floating palette picker. Applies the accent colours as inline CSS vars on
-// <html>; the dim/ring variants derive from them in index.css.
-const STORAGE_KEY = "palette-preview";
+// Two placements share the same palette state: a floating pill bottom-right on
+// desktop, and a compact icon button in the header on mobile (where the floating
+// pill would collide with the docked playback bar).
+export function PaletteSwitcher({ variant = "floating" }: { variant?: "floating" | "compact" }) {
+  const { id, setId, palettes, swatch } = usePalette();
 
-export function PaletteSwitcher() {
-  const { resolvedTheme } = useTheme();
-  const [id, setId] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved && PALETTES.some((p) => p.id === saved) ? saved : PALETTES[0].id;
-  });
+  const menu = (
+    <SelectContent align="end" position="popper" sideOffset={8} className="max-h-80">
+      {palettes.map((p) => {
+        const { box, root } = swatch(p);
+        return (
+          <SelectItem key={p.id} value={p.id}>
+            <span className="flex items-center gap-2">
+              <span className="flex gap-0.5">
+                <span className="h-3 w-3 rounded-full" style={{ background: box }} />
+                <span className="h-3 w-3 rounded-full" style={{ background: root }} />
+              </span>
+              <span>{p.name}</span>
+            </span>
+          </SelectItem>
+        );
+      })}
+    </SelectContent>
+  );
 
-  useEffect(() => {
-    const style = document.documentElement.style;
-    const p = PALETTES.find((p) => p.id === id) ?? PALETTES[0];
-    const dark = resolvedTheme === "dark";
-    const box = dark ? darkVariant(p.box) : p.box;
-    const root = dark ? darkVariant(p.root) : p.root;
-    style.setProperty("--box", box);
-    style.setProperty("--box-fg", readableFg(box));
-    style.setProperty("--root", root);
-    style.setProperty("--root-fg", readableFg(root));
-    localStorage.setItem(STORAGE_KEY, id);
-  }, [id, resolvedTheme]);
+  if (variant === "compact") {
+    return (
+      <Select value={id} onValueChange={setId}>
+        <SelectTrigger
+          aria-label="Palette"
+          size="sm"
+          className="w-8 justify-center p-0 [&>svg:last-child]:hidden"
+        >
+          <PaletteIcon className="size-4" />
+        </SelectTrigger>
+        {menu}
+      </Select>
+    );
+  }
 
-  // ↑ / ↓ cycle through palettes.
-  const step = (dir: number) =>
-    setId((cur) => {
-      const i = PALETTES.findIndex((p) => p.id === cur);
-      const next = (i + dir + PALETTES.length) % PALETTES.length;
-      return PALETTES[next].id;
-    });
-  useHotkeys("up", () => step(-1), { preventDefault: true });
-  useHotkeys("down", () => step(1), { preventDefault: true });
-
-  const dark = resolvedTheme === "dark";
-
+  const current = palettes.find((p) => p.id === id) ?? palettes[0];
+  const { box, root } = swatch(current);
   return (
     <div
-      className="fixed bottom-20 right-4 z-50 flex items-center gap-1.5 rounded-md border bg-background/90 px-2 py-1.5 shadow-lg backdrop-blur"
+      className="fixed right-4 bottom-[3.25rem] z-50 hidden translate-y-1/2 md:block"
       title="↑ / ↓ to cycle palettes"
     >
-      <Palette className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       <Select value={id} onValueChange={setId}>
-        <SelectTrigger size="sm" className="w-fit">
-          <SelectValue />
+        <SelectTrigger className="gap-2 rounded-full bg-card/90 px-3 py-2 shadow-lg backdrop-blur">
+          <PaletteIcon className="size-4" />
+          <span className="flex gap-0.5">
+            <span className="h-3.5 w-3.5 rounded-full" style={{ background: box }} />
+            <span className="h-3.5 w-3.5 rounded-full" style={{ background: root }} />
+          </span>
         </SelectTrigger>
-        <SelectContent align="end" className="max-h-80">
-          {PALETTES.map((p) => {
-            const box = dark ? darkVariant(p.box) : p.box;
-            const root = dark ? darkVariant(p.root) : p.root;
-            return (
-              <SelectItem key={p.id} value={p.id}>
-                <span className="flex items-center gap-2">
-                  <span className="flex gap-0.5">
-                    <span className="h-3 w-3 rounded-full" style={{ background: box }} />
-                    <span className="h-3 w-3 rounded-full" style={{ background: root }} />
-                  </span>
-                  <span data-palette-name>{p.name}</span>
-                </span>
-              </SelectItem>
-            );
-          })}
-        </SelectContent>
+        {menu}
       </Select>
     </div>
   );

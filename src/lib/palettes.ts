@@ -19,14 +19,15 @@ export function readableFg(hex: string): string {
   return yiq >= 150 ? "#1a1626" : "#ffffff";
 }
 
-// Derive a dark-mode pastel of a colour: same hue, lightened and softened in
-// OKLCH so the palette reads well on a dark background instead of going muddy.
+// Derive a dark-mode variant of a colour: same hue, taken to a medium lightness
+// in OKLCH and kept saturated so the dots read as rich accents on a dark
+// background rather than washed-out pastels.
 export function darkVariant(hex: string): string {
   const [, a, b] = rgbToOklab(hexToRgb01(hex));
   const c = Math.hypot(a, b);
   const h = Math.atan2(b, a);
-  const cd = Math.min(c * 0.55, 0.105);
-  const [r, g, bl] = oklabToRgb255([0.82, cd * Math.cos(h), cd * Math.sin(h)]);
+  const cd = Math.min(c * 0.85, 0.17);
+  const [r, g, bl] = oklabToRgb255([0.74, cd * Math.cos(h), cd * Math.sin(h)]);
   return rgbToHex(r, g, bl);
 }
 

@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { MAX_FRET, STRING_LABELS, TUNING, chromaticLabel, type Key, type Note } from "@/lib/theory";
 import { cn } from "@/lib/utils";
 
@@ -43,8 +43,38 @@ export function Fretboard({
   const activeSet = useMemo(() => new Set(active.map((n) => `${n.string}:${n.fret}`)), [active]);
   const overlayOn = litKeys != null;
 
+  // Fret span the active box occupies, for the translucent box band behind it.
+  const span = useMemo(() => {
+    if (!active.length) return null;
+    let min = Infinity;
+    let max = -Infinity;
+    for (const n of active) {
+      if (n.fret < min) min = n.fret;
+      if (n.fret > max) max = n.fret;
+    }
+    return { min, max };
+  }, [active]);
+
+  // When the board is wider than the viewport, scroll the active box to centre
+  // on each box change so you don't lose it off the right edge.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    const board = boardRef.current;
+    if (!scroller || !board || !span) return;
+    const overflow = scroller.scrollWidth - scroller.clientWidth;
+    if (overflow <= 0) return; // fits in view, nothing to scroll
+    const boardRect = board.getBoundingClientRect();
+    const scrollRect = scroller.getBoundingClientRect();
+    const centerFrac = (span.min + span.max + 1) / 2 / (MAX_FRET + 1);
+    const boxCenterX = boardRect.left + centerFrac * boardRect.width;
+    const target = scroller.scrollLeft + boxCenterX - (scrollRect.left + scroller.clientWidth / 2);
+    scroller.scrollTo({ left: Math.max(0, Math.min(target, overflow)), behavior: "smooth" });
+  }, [span]);
+
   return (
-    <div className="overflow-x-auto pb-1">
+    <div ref={scrollRef} className="overflow-x-auto pb-1">
       <div className="min-w-[760px]">
         <div className="flex">
           {/* string labels */}
@@ -60,26 +90,13 @@ export function Fretboard({
           </div>
 
           {/* board */}
-          <div className="relative flex-1" style={{ height: 264 }}>
-            {/* strings + fret wires */}
+          <div ref={boardRef} className="relative flex-1" style={{ height: 264 }}>
+            {/* fret wires + strings — strings drawn last so they sit on top */}
             <svg
               className="absolute inset-0 h-full w-full"
               viewBox="0 0 18 6"
               preserveAspectRatio="none"
             >
-              {ROWS.map((s, row) => (
-                <line
-                  key={s}
-                  x1={0}
-                  x2={18}
-                  y1={row + 0.5}
-                  y2={row + 0.5}
-                  stroke="currentColor"
-                  className="text-zinc-400 dark:text-zinc-500"
-                  strokeWidth={0.8 + (5 - s) * 0.45}
-                  vectorEffect="non-scaling-stroke"
-                />
-              ))}
               {FRETS.slice(1).map((f) => (
                 <line
                   key={f}
@@ -91,9 +108,22 @@ export function Fretboard({
                   className={
                     f === 1
                       ? "text-zinc-700 dark:text-zinc-300"
-                      : "text-zinc-300 dark:text-zinc-700"
+                      : "text-zinc-200 dark:text-zinc-800"
                   }
                   strokeWidth={f === 1 ? 4 : 1.5}
+                  vectorEffect="non-scaling-stroke"
+                />
+              ))}
+              {ROWS.map((s, row) => (
+                <line
+                  key={s}
+                  x1={0}
+                  x2={18}
+                  y1={row + 0.5}
+                  y2={row + 0.5}
+                  stroke="currentColor"
+                  className="text-zinc-400 dark:text-zinc-500"
+                  strokeWidth={0.8 + (5 - s) * 0.45}
                   vectorEffect="non-scaling-stroke"
                 />
               ))}
@@ -117,6 +147,17 @@ export function Fretboard({
                 }}
               />
             ))}
+
+            {/* active box band — spans the frets the box's notes occupy */}
+            {span && (
+              <div
+                className="pointer-events-none absolute inset-y-0 rounded-lg bg-[var(--box)]/10"
+                style={{
+                  left: `${(span.min / (MAX_FRET + 1)) * 100}%`,
+                  width: `${((span.max - span.min + 1) / (MAX_FRET + 1)) * 100}%`,
+                }}
+              />
+            )}
 
             {/* clickable cells + note dots */}
             <div

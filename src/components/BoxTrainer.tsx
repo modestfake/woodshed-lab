@@ -159,186 +159,183 @@ export function BoxTrainer() {
   useHotkeys("space", () => toggle(), { preventDefault: true });
 
   return (
-    <div className="space-y-6 pb-36 sm:pb-28">
-      <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
-        <Field label="Key">
-          <Select value={keyId} onValueChange={setKeyId}>
-            <SelectTrigger className="w-24">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {KEYS.map((k) => (
-                <SelectItem key={k.id} value={k.id}>
-                  {k.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        <Field label="Scale">
-          <Select value={scaleId} onValueChange={setScaleId}>
-            <SelectTrigger className="w-52">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {SCALE_GROUPS.map((group) => (
-                <SelectGroup key={group}>
-                  <SelectLabel>{group}</SelectLabel>
-                  {SCALES.filter((s) => s.group === group).map((s) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      {s.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        <Field label="Box">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => step(-1)}
-              aria-label="Previous box"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div className="flex gap-1">
-              {Array.from({ length: BOX_COUNT }, (_, i) => i + 1).map((n) => {
-                const name = boxModeName(theScale, n);
-                return (
-                  <Tooltip key={n}>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => setBoxN(n)}
-                        className={cn(
-                          "h-9 w-9 rounded-md border text-sm font-semibold transition-colors",
-                          n === boxN
-                            ? "border-[var(--box)] bg-[var(--box)] text-[var(--box-fg)]"
-                            : "border-input bg-background hover:bg-accent",
-                        )}
-                      >
-                        {n}
-                      </button>
-                    </TooltipTrigger>
-                    {name && <TooltipContent>{name}</TooltipContent>}
-                  </Tooltip>
-                );
-              })}
-            </div>
-            <Button variant="outline" size="icon" onClick={() => step(1)} aria-label="Next box">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-          {activeBoxName && (
-            <p className="text-xs text-muted-foreground">
-              Box {boxN} · <span className="font-medium text-foreground">{activeBoxName}</span>
-            </p>
-          )}
-        </Field>
-
-        <Field label="Labels">
-          <ToggleGroup
-            type="single"
-            value={labelMode}
-            onValueChange={(v) => v && setLabelMode(v as LabelMode)}
-            variant="outline"
-          >
-            <ToggleGroupItem value="name" className="gap-1.5 px-3">
-              <Music className="h-4 w-4" />
-              Notes
-            </ToggleGroupItem>
-            <ToggleGroupItem value="degree" className="gap-1.5 px-3">
-              <ListOrdered className="h-4 w-4" />
-              Degrees
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </Field>
-
-        <Field label="Overlay">
-          <ToggleGroup
-            type="single"
-            value={overlay}
-            onValueChange={(v) => v && setOverlay(v as Overlay)}
-            variant="outline"
-          >
-            <ToggleGroupItem value="none" className="px-3">
-              None
-            </ToggleGroupItem>
-            <ToggleGroupItem value="intervals" className="px-3">
-              Intervals
-            </ToggleGroupItem>
-            <ToggleGroupItem value="progressions" className="px-3">
-              Progressions
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </Field>
-
-        {progressionsOn && (
-          <Field label="Progression">
-            <Select value={progId} onValueChange={setProgId}>
-              <SelectTrigger className="w-36">
+    <div className="space-y-6 pb-44 md:pb-28">
+      <div className="rounded-xl border bg-card/50">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3">
+          <Ctl label="Key">
+            <Select value={keyId} onValueChange={setKeyId}>
+              <SelectTrigger size="sm" className="w-20">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {PROGRESSIONS.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.label}
+                {KEYS.map((k) => (
+                  <SelectItem key={k.id} value={k.id}>
+                    {k.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-          </Field>
-        )}
+          </Ctl>
 
-        {intervalsOn && (
-          <>
-            <Field label="Anchor">
-              <Select value={String(anchorDeg)} onValueChange={(v) => setAnchorDeg(Number(v))}>
-                <SelectTrigger className="w-28">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {DEGREES.map((d) => (
-                    <SelectItem key={d} value={String(d)}>
-                      {d} · {degreeName(d)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-
-            <Field label="Interval (run step)">
-              <ToggleGroup
-                type="single"
-                value={String(intervalN)}
-                onValueChange={(v) => v && setIntervalN(Number(v))}
-                variant="outline"
-              >
-                {INTERVAL_CHOICES.map((n) => (
-                  <ToggleGroupItem key={n} value={String(n)} className="w-9 px-0">
-                    {n}
-                  </ToggleGroupItem>
+          <Ctl label="Scale">
+            <Select value={scaleId} onValueChange={setScaleId}>
+              <SelectTrigger size="sm" className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SCALE_GROUPS.map((group) => (
+                  <SelectGroup key={group}>
+                    <SelectLabel>{group}</SelectLabel>
+                    {SCALES.filter((s) => s.group === group).map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 ))}
-              </ToggleGroup>
-            </Field>
-          </>
+              </SelectContent>
+            </Select>
+          </Ctl>
+
+          <Ctl label="Box">
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => step(-1)}
+                aria-label="Previous box"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="flex h-8 min-w-8 items-center justify-center rounded-md border border-[var(--box)] bg-[var(--box)] px-2 text-sm font-semibold text-[var(--box-fg)]">
+                    {boxN}
+                  </span>
+                </TooltipTrigger>
+                {activeBoxName && <TooltipContent>{activeBoxName}</TooltipContent>}
+              </Tooltip>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => step(1)}
+                aria-label="Next box"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <span className="text-sm text-muted-foreground">/ {BOX_COUNT}</span>
+            </div>
+          </Ctl>
+
+          <Ctl label="Labels">
+            <ToggleGroup
+              type="single"
+              size="sm"
+              value={labelMode}
+              onValueChange={(v) => v && setLabelMode(v as LabelMode)}
+              variant="outline"
+            >
+              <ToggleGroupItem value="name" className="gap-1.5 px-3">
+                <Music className="h-4 w-4" />
+                Notes
+              </ToggleGroupItem>
+              <ToggleGroupItem value="degree" className="gap-1.5 px-3">
+                <ListOrdered className="h-4 w-4" />
+                Degrees
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </Ctl>
+
+          <Ctl label="Overlay">
+            <ToggleGroup
+              type="single"
+              size="sm"
+              value={overlay}
+              onValueChange={(v) => v && setOverlay(v as Overlay)}
+              variant="outline"
+            >
+              <ToggleGroupItem value="none" className="px-3">
+                None
+              </ToggleGroupItem>
+              <ToggleGroupItem value="intervals" className="px-3">
+                Intervals
+              </ToggleGroupItem>
+              <ToggleGroupItem value="progressions" className="px-3">
+                Progressions
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </Ctl>
+        </div>
+
+        {overlay !== "none" && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t px-4 py-3">
+            {progressionsOn && (
+              <Ctl label="Progression">
+                <Select value={progId} onValueChange={setProgId}>
+                  <SelectTrigger size="sm" className="w-36">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PROGRESSIONS.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Ctl>
+            )}
+
+            {intervalsOn && (
+              <>
+                <Ctl label="Anchor">
+                  <Select value={String(anchorDeg)} onValueChange={(v) => setAnchorDeg(Number(v))}>
+                    <SelectTrigger size="sm" className="w-28">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DEGREES.map((d) => (
+                        <SelectItem key={d} value={String(d)}>
+                          {d} · {degreeName(d)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Ctl>
+
+                <Ctl label="Interval (run step)">
+                  <ToggleGroup
+                    type="single"
+                    size="sm"
+                    value={String(intervalN)}
+                    onValueChange={(v) => v && setIntervalN(Number(v))}
+                    variant="outline"
+                  >
+                    {INTERVAL_CHOICES.map((n) => (
+                      <ToggleGroupItem key={n} value={String(n)} className="w-9 px-0">
+                        {n}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                </Ctl>
+              </>
+            )}
+          </div>
         )}
       </div>
 
-      <Fretboard
-        map={map}
-        active={active}
-        theKey={theKey}
-        labelMode={labelMode}
-        onPlay={playMidi}
-        playingKey={playingKey}
-        litKeys={litKeys}
-        anchorKeys={anchorKeys}
-      />
+      <div className="rounded-xl border bg-card/50 p-4">
+        <Fretboard
+          map={map}
+          active={active}
+          theKey={theKey}
+          labelMode={labelMode}
+          onPlay={playMidi}
+          playingKey={playingKey}
+          litKeys={litKeys}
+          anchorKeys={anchorKeys}
+        />
+      </div>
 
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
         <Legend className="bg-[var(--root)]" text="Root (1)" />
@@ -364,12 +361,10 @@ export function BoxTrainer() {
   );
 }
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Ctl({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="space-y-1.5">
-      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
-      </div>
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-muted-foreground">{label}</span>
       {children}
     </div>
   );
