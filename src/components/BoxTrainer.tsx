@@ -1,21 +1,9 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import {
-  ArrowDown,
-  ArrowUp,
-  ChevronLeft,
-  ChevronRight,
-  Info,
-  ListOrdered,
-  Music,
-  Play,
-  Repeat,
-  Shuffle,
-  Square,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Info, ListOrdered, Music } from "lucide-react";
 import { Fretboard, type LabelMode } from "@/components/Fretboard";
+import { PlaybackBar } from "@/components/PlaybackBar";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -171,7 +159,7 @@ export function BoxTrainer() {
   useHotkeys("space", () => toggle(), { preventDefault: true });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-36 sm:pb-28">
       <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
         <Field label="Key">
           <Select value={keyId} onValueChange={setKeyId}>
@@ -339,93 +327,6 @@ export function BoxTrainer() {
             </Field>
           </>
         )}
-
-        <Field label="Playback">
-          <Button
-            onClick={(e) => {
-              toggle();
-              e.currentTarget.blur();
-            }}
-            className="w-32"
-          >
-            {isPlaying ? (
-              <>
-                <Square className="h-4 w-4 fill-current" /> Stop
-              </>
-            ) : (
-              <>
-                <Play className="h-4 w-4 fill-current" /> {overlay === "none" ? "Play box" : "Play"}
-              </>
-            )}
-          </Button>
-        </Field>
-
-        <Field label="Direction">
-          <ToggleGroup
-            type="single"
-            value={playMode}
-            onValueChange={(v) => v && setPlayMode(v as PlayMode)}
-            variant="outline"
-          >
-            <ToggleGroupItem value="asc" aria-label="Ascending" title="Ascending" className="px-3">
-              <ArrowUp className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="desc"
-              aria-label="Descending"
-              title="Descending"
-              className="px-3"
-            >
-              <ArrowDown className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="loop"
-              aria-label="Loop back and forth"
-              title="Loop (back & forth)"
-              className="px-3"
-            >
-              <Repeat className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="random"
-              aria-label="Shuffle (random order)"
-              title="Shuffle (random order)"
-              className="px-3"
-            >
-              <Shuffle className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </Field>
-
-        <Field label="Feel">
-          <ToggleGroup
-            type="single"
-            value={feel}
-            onValueChange={(v) => v && setFeel(v as Feel)}
-            variant="outline"
-          >
-            <ToggleGroupItem value="straight" className="px-3">
-              Straight
-            </ToggleGroupItem>
-            <ToggleGroupItem value="swing" className="px-3">
-              Swing
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </Field>
-
-        <Field label="Tempo">
-          <div className="flex h-9 items-center gap-3">
-            <Slider
-              value={[bpm]}
-              onValueChange={(v) => setBpm(v[0] ?? bpm)}
-              min={40}
-              max={240}
-              step={5}
-              className="w-32"
-            />
-            <span className="w-16 text-sm tabular-nums text-muted-foreground">{bpm} BPM</span>
-          </div>
-        </Field>
       </div>
 
       <Fretboard
@@ -448,6 +349,17 @@ export function BoxTrainer() {
           Click any fret to hear it
         </span>
       </div>
+
+      <PlaybackBar
+        isPlaying={isPlaying}
+        onToggle={toggle}
+        playMode={playMode}
+        onPlayModeChange={setPlayMode}
+        feel={feel}
+        onFeelChange={setFeel}
+        bpm={bpm}
+        onBpmChange={setBpm}
+      />
     </div>
   );
 }
