@@ -214,6 +214,44 @@ export function box(key: Key, scale: Scale, n: number): Note[] {
   return notes;
 }
 
+// The ascending interval run for the Intervals overlay. Starting from the
+// anchor's lowest instance in the box, each next note is a diatonic `interval`
+// (a 2nd, 3rd, …) above the previous — N-1 scale steps, since the box's notes
+// are consecutive scale degrees. It climbs continuously across octaves (it does
+// not restart each octave) until the box ends. Returns the run notes in order.
+export function intervalRun(box: Note[], anchorDeg: number, interval: number): Note[] {
+  const start = box.findIndex((n) => n.degree === anchorDeg);
+  if (start < 0) return [];
+  const step = Math.max(1, interval - 1);
+  const run: Note[] = [];
+  for (let i = start; i < box.length; i += step) run.push(box[i]);
+  return run;
+}
+
+// A chord progression as an ordered list of scale degrees — the Progressions
+// overlay lights these degrees in the box (quality isn't shown, only the roots).
+// Labelled with the common major-key roman numerals; the degrees are positional,
+// so they hold in any scale.
+export type Progression = { id: string; label: string; degrees: number[] };
+
+export const PROGRESSIONS: Progression[] = [
+  { id: "ii-V-I", label: "ii–V–I", degrees: [2, 5, 1] },
+  { id: "vi-ii-V-I", label: "vi–ii–V–I", degrees: [6, 2, 5, 1] },
+  { id: "I-vi-ii-V", label: "I–vi–ii–V", degrees: [1, 6, 2, 5] },
+  { id: "I-IV-V", label: "I–IV–V", degrees: [1, 4, 5] },
+  { id: "I-V-vi-IV", label: "I–V–vi–IV", degrees: [1, 5, 6, 4] },
+  { id: "I-vi-IV-V", label: "I–vi–IV–V", degrees: [1, 6, 4, 5] },
+];
+
+// The close root-position triad of `degree` in the box: the lowest root plus the
+// 3rd and 5th above it. Because the box's notes are consecutive scale degrees,
+// those are simply box[i], box[i+2], box[i+4]. Trimmed to whatever fits the box.
+export function boxTriad(box: Note[], degree: number): Note[] {
+  const i = box.findIndex((n) => n.degree === degree);
+  if (i < 0) return [];
+  return [i, i + 2, i + 4].filter((j) => j < box.length).map((j) => box[j]);
+}
+
 // The seven boxes of the major scale are the seven diatonic modes, in order.
 // The other diatonic modes are just rotations of this list.
 const MODE_NAMES = [

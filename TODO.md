@@ -22,7 +22,9 @@ lot at the bottom. (Curriculum source of truth is `src/exercises.ts`; this is th
 Each is a `soon` stub in `src/exercises.ts`; building one = a component + flipping it
 to `status: "live"`.
 
-- [ ] Intervals in the box — overlay 3rds/6ths/♭7 relative to a chosen root
+- [x] Intervals in the box — built as an **Overlay** on the 3NPS box: an ascending
+      interval *run* from an anchor degree (each note one interval above the previous,
+      climbing the box, no per-octave reset), not a separate exercise. See ADR 0009.
 - [ ] II–V–I across the neck in a key
 - [ ] One note of II–V–I per key
 - [ ] Modes on one string
@@ -55,8 +57,13 @@ to `status: "live"`.
 - [x] Feel: Straight / Swing toggle — swing switches to a duple eighth feel (2/beat) with a
       medium long-short lilt (≈1.85:1); plus per-note velocity humanize (level + brightness)
       and a darker lowpass + small-room reverb for a jazzier voice
+- [x] **Progressions overlay** — pick a progression (ii–V–I, I–vi–ii–V, …); shows the close
+      root-position triad on each degree in the box (tonic in root colour). Play walks the
+      triads: asc low→high, desc high→low, back-and-forth ping-pongs, random plays a few
+      notes per triad then moves on. See ADR 0009.
 - [ ] Per-box tinting in the dim layer so you can see boxes interlock
-- [ ] Highlight a selected root and show intervals from it
+- [x] Highlight a selected root and show intervals from it — covered by the Intervals overlay
+      (anchor degree + interval run)
 - [ ] Alternate tunings / capo (TUNING is already data-driven in `theory.ts`)
 - [ ] Metronome
 - [ ] Cool-neutral theme option (bluish backgrounds, not just accents)

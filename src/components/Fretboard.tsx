@@ -17,9 +17,23 @@ type Props = {
   labelMode: LabelMode;
   onPlay: (midi: number) => void;
   playingKey?: string | null;
+  // Overlay (Intervals/Progressions): cell keys to spotlight. When set, the box
+  // recedes to a faint context tier and only these pop; `anchorKeys` of them use
+  // the root colour. Null/undefined = no overlay (plain box).
+  litKeys?: Set<string> | null;
+  anchorKeys?: Set<string> | null;
 };
 
-export function Fretboard({ map, active, theKey, labelMode, onPlay, playingKey }: Props) {
+export function Fretboard({
+  map,
+  active,
+  theKey,
+  labelMode,
+  onPlay,
+  playingKey,
+  litKeys,
+  anchorKeys,
+}: Props) {
   const mapByCell = useMemo(() => {
     const m = new Map<string, Note>();
     for (const n of map) m.set(`${n.string}:${n.fret}`, n);
@@ -27,6 +41,7 @@ export function Fretboard({ map, active, theKey, labelMode, onPlay, playingKey }
   }, [map]);
 
   const activeSet = useMemo(() => new Set(active.map((n) => `${n.string}:${n.fret}`)), [active]);
+  const overlayOn = litKeys != null;
 
   return (
     <div className="overflow-x-auto pb-1">
@@ -118,6 +133,25 @@ export function Fretboard({ map, active, theKey, labelMode, onPlay, playingKey }
                   const isActive = activeSet.has(cellKey);
                   const midi = TUNING[s] + f;
                   const ghost = note ? null : chromaticLabel(theKey, midi % 12);
+
+                  // Pick a colour family (root vs box) and intensity per cell.
+                  let tone: "root" | "box" = "box";
+                  let level: "bright" | "context" | "dim" = "dim";
+                  if (note) {
+                    if (overlayOn) {
+                      if (litKeys.has(cellKey)) {
+                        level = "bright";
+                        tone = anchorKeys?.has(cellKey) ? "root" : "box";
+                      } else if (isActive) {
+                        level = "context"; // box shape, de-emphasised behind the overlay
+                      } else {
+                        tone = note.isRoot ? "root" : "box";
+                      }
+                    } else {
+                      level = isActive ? "bright" : "dim";
+                      tone = note.isRoot ? "root" : "box";
+                    }
+                  }
                   return (
                     <button
                       key={cellKey}
@@ -130,8 +164,8 @@ export function Fretboard({ map, active, theKey, labelMode, onPlay, playingKey }
                       {note ? (
                         <Dot
                           label={labelMode === "name" ? note.name : note.label}
-                          isRoot={note.isRoot}
-                          isActive={isActive}
+                          tone={tone}
+                          level={level}
                           isPlaying={playingKey === cellKey}
                         />
                       ) : (
@@ -175,26 +209,30 @@ export function Fretboard({ map, active, theKey, labelMode, onPlay, playingKey }
 
 const Dot = memo(function Dot({
   label,
-  isRoot,
-  isActive,
+  tone,
+  level,
   isPlaying,
 }: {
   label: string;
-  isRoot: boolean;
-  isActive: boolean;
+  tone: "root" | "box";
+  level: "bright" | "context" | "dim";
   isPlaying: boolean;
 }) {
   return (
     <span
       className={cn(
         "relative flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold tabular-nums transition-transform duration-150 group-hover:scale-[1.18] group-hover:shadow-md",
-        isActive
-          ? isRoot
+        level === "bright" &&
+          (tone === "root"
             ? "bg-[var(--root)] text-[var(--root-fg)] shadow-sm ring-2 ring-[var(--root-ring)]"
-            : "bg-[var(--box)] text-[var(--box-fg)] shadow-sm"
-          : isRoot
+            : "bg-[var(--box)] text-[var(--box-fg)] shadow-sm"),
+        // Box shape behind an overlay: dim fill + a faint box-coloured ring.
+        level === "context" &&
+          "bg-[var(--box-dim)] text-[var(--box-dim-fg)] ring-1 ring-inset ring-[var(--box)]/40",
+        level === "dim" &&
+          (tone === "root"
             ? "bg-[var(--root-dim)] text-[var(--root-dim-fg)]"
-            : "bg-[var(--box-dim)] text-[var(--box-dim-fg)]",
+            : "bg-[var(--box-dim)] text-[var(--box-dim-fg)]"),
         isPlaying && "z-10 scale-125 shadow-lg ring-2 ring-foreground/70",
       )}
     >

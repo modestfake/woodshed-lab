@@ -28,13 +28,6 @@ export const EXERCISES: Exercise[] = [
       "Jazz's backbone progression — ii7 → V7 → Imaj7. Drill it through all twelve keys until the changes fall under your fingers wherever a tune modulates.",
   },
   {
-    id: "intervals",
-    label: "Intervals in the box",
-    status: "soon",
-    description:
-      "Overlay intervals — 3rds, 6ths, the ♭7 — measured from a chosen root, right inside a box. Hearing the distance between notes (not just scale steps) is how melodic and comping lines get their shape.",
-  },
-  {
     id: "pentatonics",
     label: "Pentatonics",
     status: "soon",

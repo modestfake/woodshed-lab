@@ -33,17 +33,26 @@ import {
   BOX_COUNT,
   KEYS,
   SCALES,
+  PROGRESSIONS,
   box,
   boxModeName,
+  boxTriad,
   diatonicMap,
+  intervalRun,
   keyById,
   scaleById,
 } from "@/lib/theory";
+import type { Note } from "@/lib/theory";
 import { cn } from "@/lib/utils";
 
 const SCALE_GROUPS = Array.from(new Set(SCALES.map((s) => s.group)));
 
 type Feel = "straight" | "swing";
+type Overlay = "none" | "intervals" | "progressions";
+
+// Diatonic intervals offerable from the anchor in the Intervals overlay.
+const INTERVAL_CHOICES = [2, 3, 4, 5, 6, 7];
+const DEGREES = [1, 2, 3, 4, 5, 6, 7];
 
 // Straight feel plays the box as eighth-note triplets — 3 notes/beat, one string
 // per beat (natural for 3NPS). Swing drops to duple eighths (2/beat) with a
@@ -51,6 +60,24 @@ type Feel = "straight" | "swing";
 const STRAIGHT_NPB = 3;
 const SWING_NPB = 2;
 const SWING_RATIO = 0.3;
+
+// Random progression playback: a few notes per triad, baked over a few cycles
+// and looped (the existing player's loop ping-pongs it).
+const RANDOM_CYCLES = 6;
+const RANDOM_PER_DEGREE = 4;
+
+// Pick `count` notes at random from a triad, avoiding immediate repeats.
+function fewRandom(triad: Note[], count: number): Note[] {
+  const out: Note[] = [];
+  let prev = -1;
+  for (let k = 0; k < count; k++) {
+    let i = Math.floor(Math.random() * triad.length);
+    if (triad.length > 1 && i === prev) i = (i + 1) % triad.length;
+    out.push(triad[i]);
+    prev = i;
+  }
+  return out;
+}
 
 export function BoxTrainer() {
   const [keyId, setKeyId] = useState("C");
@@ -60,6 +87,10 @@ export function BoxTrainer() {
   const [bpm, setBpm] = useState(120);
   const [playMode, setPlayMode] = useState<PlayMode>("asc");
   const [feel, setFeel] = useState<Feel>("straight");
+  const [overlay, setOverlay] = useState<Overlay>("none");
+  const [anchorDeg, setAnchorDeg] = useState(1);
+  const [intervalN, setIntervalN] = useState(3); // step size of the run
+  const [progId, setProgId] = useState(PROGRESSIONS[0].id);
 
   const theKey = keyById(keyId);
   const theScale = scaleById(scaleId);
@@ -67,11 +98,68 @@ export function BoxTrainer() {
   const active = useMemo(() => box(theKey, theScale, boxN), [theKey, theScale, boxN]);
   const activeBoxName = boxModeName(theScale, boxN);
 
+  const intervalsOn = overlay === "intervals";
+  const progressionsOn = overlay === "progressions";
+  const prog = PROGRESSIONS.find((p) => p.id === progId) ?? PROGRESSIONS[0];
+
+  // Progression triads: the close root-position triad on each degree, in order.
+  const triads = useMemo(
+    () =>
+      progressionsOn ? prog.degrees.map((d) => boxTriad(active, d)).filter((t) => t.length) : null,
+    [progressionsOn, prog, active],
+  );
+
+  // `lit` = the overlay's highlighted notes (drives the Fretboard tiers).
+  // Intervals: the run. Progressions: every triad note.
+  const lit = useMemo(() => {
+    if (intervalsOn) return intervalRun(active, anchorDeg, intervalN);
+    if (triads) return triads.flat();
+    return null;
+  }, [intervalsOn, triads, active, anchorDeg, intervalN]);
+
+  // `playSeq` = what Play walks, which differs from `lit` for progressions:
+  // ascending = each triad low→high, descending = high→low, random = a few notes
+  // per triad over a few cycles (looped). Box/Intervals just play `lit`.
+  const playSeq = useMemo(() => {
+    if (!triads) return lit ?? active;
+    if (playMode === "desc") return triads.flatMap((t) => [...t].reverse());
+    if (playMode === "random") {
+      const seq: Note[] = [];
+      for (let c = 0; c < RANDOM_CYCLES; c++)
+        for (const t of triads) seq.push(...fewRandom(t, RANDOM_PER_DEGREE));
+      return seq;
+    }
+    return triads.flatMap((t) => t); // ascending + back-and-forth
+  }, [triads, lit, active, playMode]);
+
+  const litKeys = useMemo(
+    () => (lit ? new Set(lit.map((n) => `${n.string}:${n.fret}`)) : null),
+    [lit],
+  );
+  // Root colour: the run's start note (Intervals) or the tonic notes among the
+  // triads (Progressions).
+  const anchorKeys = useMemo(() => {
+    if (intervalsOn) return lit && lit.length ? new Set([`${lit[0].string}:${lit[0].fret}`]) : null;
+    if (progressionsOn && lit)
+      return new Set(lit.filter((n) => n.degree === 1).map((n) => `${n.string}:${n.fret}`));
+    return null;
+  }, [intervalsOn, progressionsOn, lit]);
+
+  const degreeName = (d: number) => map.find((n) => n.degree === d)?.name ?? String(d);
+
+  // Progressions bake direction into `playSeq`, so the player just runs it once
+  // (asc/desc) or ping-pongs it (back-and-forth/random → continuous).
+  const playMode2: PlayMode = progressionsOn
+    ? playMode === "loop" || playMode === "random"
+      ? "loop"
+      : "asc"
+    : playMode;
+
   const notesPerBeat = feel === "swing" ? SWING_NPB : STRAIGHT_NPB;
   const { playingKey, isPlaying, toggle } = usePlayback(
-    active,
+    playSeq,
     60000 / (bpm * notesPerBeat),
-    playMode,
+    playMode2,
     feel === "swing" ? SWING_RATIO : 0,
   );
 
@@ -182,6 +270,76 @@ export function BoxTrainer() {
           </ToggleGroup>
         </Field>
 
+        <Field label="Overlay">
+          <ToggleGroup
+            type="single"
+            value={overlay}
+            onValueChange={(v) => v && setOverlay(v as Overlay)}
+            variant="outline"
+          >
+            <ToggleGroupItem value="none" className="px-3">
+              None
+            </ToggleGroupItem>
+            <ToggleGroupItem value="intervals" className="px-3">
+              Intervals
+            </ToggleGroupItem>
+            <ToggleGroupItem value="progressions" className="px-3">
+              Progressions
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </Field>
+
+        {progressionsOn && (
+          <Field label="Progression">
+            <Select value={progId} onValueChange={setProgId}>
+              <SelectTrigger className="w-36">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PROGRESSIONS.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+        )}
+
+        {intervalsOn && (
+          <>
+            <Field label="Anchor">
+              <Select value={String(anchorDeg)} onValueChange={(v) => setAnchorDeg(Number(v))}>
+                <SelectTrigger className="w-28">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {DEGREES.map((d) => (
+                    <SelectItem key={d} value={String(d)}>
+                      {d} · {degreeName(d)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+
+            <Field label="Interval (run step)">
+              <ToggleGroup
+                type="single"
+                value={String(intervalN)}
+                onValueChange={(v) => v && setIntervalN(Number(v))}
+                variant="outline"
+              >
+                {INTERVAL_CHOICES.map((n) => (
+                  <ToggleGroupItem key={n} value={String(n)} className="w-9 px-0">
+                    {n}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </Field>
+          </>
+        )}
+
         <Field label="Playback">
           <Button
             onClick={(e) => {
@@ -196,7 +354,7 @@ export function BoxTrainer() {
               </>
             ) : (
               <>
-                <Play className="h-4 w-4 fill-current" /> Play box
+                <Play className="h-4 w-4 fill-current" /> {overlay === "none" ? "Play box" : "Play"}
               </>
             )}
           </Button>
@@ -277,6 +435,8 @@ export function BoxTrainer() {
         labelMode={labelMode}
         onPlay={playMidi}
         playingKey={playingKey}
+        litKeys={litKeys}
+        anchorKeys={anchorKeys}
       />
 
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">

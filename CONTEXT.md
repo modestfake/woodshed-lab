@@ -54,16 +54,42 @@ Degree 1 of the selected scale — the tonic. Rendered in its own colour and lab
 `1` in degrees mode.
 _Avoid_: tonic (UI copy says "root"), key center
 
-**Interval** _(Phase 2)_:
-The distance between two notes (3rd, 6th, ♭7). Distinct from **scale degree**,
-which is a fixed position in the scale.
+**Anchor**:
+The note intervals are measured from in the Intervals overlay — any scale degree
+(1–7), chosen via a select, defaulting to the root. Not necessarily the tonic.
+_Avoid_: root (the root is degree 1; an anchor can be any degree)
+
+**Interval**:
+A diatonic distance measured by walking scale steps (a 2nd, 3rd, … 7th), so its
+quality comes from the scale and where you start — a "3rd" from D in C major is a
+minor 3rd (F). In the Intervals overlay one interval is the **run step**: from the
+**anchor**, each next note is that interval above the previous, climbing the box
+continuously (no per-octave reset). Distinct from **scale degree**, a fixed position
+in the scale; they share glyphs but mean different things.
 _Avoid_: degree
+
+**Progression**:
+A named chord progression as an ordered list of scale degrees (ii–V–I = 2, 5, 1).
+The Progressions overlay shows the diatonic **triad** on each degree — the close
+root-position voicing in the box (root + 3rd + 5th, ii–V–I → D-F-A · G-B-D · C-E-G),
+the tonic note in the root colour. Play walks the triads in order: ascending plays
+each low→high, descending high→low, back-and-forth ping-pongs, random plays a few
+notes per triad then moves on.
+_Avoid_: changes; quality (we voice diatonic triads, not figured chords)
 
 ### UI
 
 **Label mode**:
 Whether dots show note names (C, D, E…) or scale degrees (1, 2, ♭3…).
 _Avoid_: display mode, view
+
+**Overlay**:
+A highlight layer chosen on top of the active box, mutually exclusive: **None**
+(the plain box), **Intervals** (an interval run climbing the box from an anchor), or
+**Progressions** (the scale degrees of a chord progression, e.g. ii–V–I = 2,5,1).
+Switching overlay re-colours which box notes are emphasised; key, scale, and box
+are unchanged.
+_Avoid_: mode, layer, view
 
 ## Flagged ambiguities
 
@@ -72,8 +98,10 @@ _Avoid_: display mode, view
 - **key vs scale vs mode** — **key** = tonic; **scale** = the interval set; a
   **mode** is just one of the scales in the list, not a separate axis of choice.
 - **degree vs interval** — **degree** is a position in the scale (1–7); **interval**
-  (Phase 2) is the distance between two notes. They share glyphs (♭3) but mean
-  different things.
+  is the distance between two notes. They share glyphs (♭3) but mean different things.
+- **root vs anchor** — **root** is the tonic (degree 1). **anchor** is whatever degree
+  the Intervals overlay measures from (default the root, but any degree). "A 3rd" from
+  the anchor is a true interval, not scale degree 3.
 - **root vs tonic vs "1"** — the same note. UI says **root**; the degree label shows
   **1**.
 
