@@ -46,7 +46,7 @@ export function PlaybackBar({
               step={5}
               className="min-w-0 flex-1 [&_[data-slot=slider-range]]:bg-[var(--box)] [&_[data-slot=slider-thumb]]:border-[var(--box)] [&_[data-slot=slider-thumb]]:bg-white md:w-28 md:flex-none"
             />
-            <span className="w-14 shrink-0 text-right text-sm tabular-nums text-muted-foreground md:text-left">
+            <span className="w-16 shrink-0 text-right text-sm whitespace-nowrap tabular-nums text-muted-foreground md:text-left">
               {bpm} BPM
             </span>
           </div>
